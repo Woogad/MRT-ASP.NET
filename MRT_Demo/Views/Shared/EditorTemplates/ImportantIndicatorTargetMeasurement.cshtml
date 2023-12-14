@@ -41,15 +41,7 @@
             }
             else
             {
-                if (Model.IsDispaly)
-                {
-                    @Html.HiddenFor(m => m.IndicatorUnitID)
-                    @Html.DropDownListFor(m => m.IndicatorUnitID, indicatorUnitDropdownList, new { disabled = "disabled" })
-                }
-                else
-                {
-                    @Html.DropDownListFor(m => m.IndicatorUnitID, indicatorUnitDropdownList, new { })
-                }
+                @Html.DropDownListFor(m => m.IndicatorUnitID, indicatorUnitDropdownList, new { })
             }
         </td>
         @foreach (var item in Model.TargetList)
@@ -66,9 +58,18 @@
         }
         else
         {
-            <td>
-                <input type="submit" value="ลบ" onclick="DeleteTargetMeasurement(@Html.IdFor(m => m.IsDeleteTarget) )" />
-            </td>
+            if (Model.IsDispaly)
+            {
+                <td>
+                    <input type="submit" value="ลบ" onclick="DeleteTargetMeasurement(@Html.IdFor(m => m.IsDeleteTarget) )" disabled />
+                </td>
+            }
+            else
+            {
+                <td>
+                    <input type="submit" value="ลบ" onclick="DeleteTargetMeasurement(@Html.IdFor(m => m.IsDeleteTarget) )" />
+                </td>
+            }
         }
     </tr>
 }

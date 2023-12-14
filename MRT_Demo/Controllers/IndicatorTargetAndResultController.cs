@@ -48,34 +48,33 @@ namespace MRT_Demo.Controllers
                 return HttpNotFound();
             }
 
-            indicator = SetupTargetMeasurementFromDB(indicator);
-            List<ImportantIndicatorTargetMeasurement> temp = new List<ImportantIndicatorTargetMeasurement>();
-            
-            foreach (var i in indicator.IndicatorXIndicatorType)
+            if (indicator.ImportantIndicatorTargetMeasurement.Count > 0)
             {
-                if (i.IsCheck)
+                indicator = SetupTargetMeasurementFromDB(indicator);
+                for (int i = 0; i < indicator.IndicatorXIndicatorType.Count; i++)
                 {
-                    ImportantIndicatorTargetMeasurement measurement = new ImportantIndicatorTargetMeasurement();
-                    measurement.IndicatorType = i.IndicatorType;
-                    SelectListItem selectListItem = new SelectListItem() { Text = i.IndicatorType.IndicatorType1, Value = i.IndicatorTypeID.ToString() };
-                    _IndicatorTypeDropdownList.Add(selectListItem);
-
-                    var imTargetTypeDisplay = InitImportantIndicatorTargetMeasurement();
-                    imTargetTypeDisplay.IndicatorTypeID = i.IndicatorTypeID;
-                    imTargetTypeDisplay.IsDispaly = true;
-                    imTargetTypeDisplay.IndicatorID = indicator.ID;
-                    temp.Add(imTargetTypeDisplay);
+                    indicator.ImportantIndicatorTargetMeasurement.ToList()[i + 1].IsDispaly = true;
                 }
             }
-            temp.AddRange(indicator.ImportantIndicatorTargetMeasurement.ToList());
-            indicator.ImportantIndicatorTargetMeasurement = temp;
-
-            foreach (var i in indicator.IndicatorUnit)
+            else
             {
-                SelectListItem selectListItem = new SelectListItem() { Text = i.Unit, Value = i.ID.ToString() };
-                _IndicatorUnitDropdownList.Add(selectListItem);
+                List<ImportantIndicatorTargetMeasurement> temp = new List<ImportantIndicatorTargetMeasurement>();
+                foreach (var i in indicator.IndicatorXIndicatorType)
+                {
+                    if (i.IsCheck)
+                    {
+                        var imTargetTypeDisplay = InitImportantIndicatorTargetMeasurementRow();
+                        imTargetTypeDisplay.IndicatorTypeID = i.IndicatorTypeID;
+                        imTargetTypeDisplay.IsDispaly = true;
+                        imTargetTypeDisplay.IndicatorID = indicator.ID;
+                        temp.Add(imTargetTypeDisplay);
+                    }
+                }
+                temp.AddRange(indicator.ImportantIndicatorTargetMeasurement.ToList());
+                indicator.ImportantIndicatorTargetMeasurement = temp;
             }
 
+            InitDropdownListStatic(indicator);
             ViewbagDropdown();
 
             return View(indicator);
@@ -89,7 +88,7 @@ namespace MRT_Demo.Controllers
         public ActionResult AddTargetMeasurement(Indicator indicator)
         {
             ModelState.Clear();
-            indicator.ImportantIndicatorTargetMeasurement.Add(InitImportantIndicatorTargetMeasurement());
+            indicator.ImportantIndicatorTargetMeasurement.Add(InitImportantIndicatorTargetMeasurementRow());
             ViewbagDropdown();
             return View(_SceneView, indicator);
         }
@@ -219,7 +218,7 @@ namespace MRT_Demo.Controllers
             _IndicatorUnitDropdownList.Clear();
         }
 
-        private ImportantIndicatorTargetMeasurement InitImportantIndicatorTargetMeasurement()
+        private ImportantIndicatorTargetMeasurement InitImportantIndicatorTargetMeasurementRow()
         {
             ImportantIndicatorTargetMeasurement importantIndicatorTargetMeasurement = new ImportantIndicatorTargetMeasurement();
 
@@ -239,6 +238,8 @@ namespace MRT_Demo.Controllers
 
         private Indicator SetupTargetMeasurementFromDB(Indicator indicator)
         {
+            if (indicator.ImportantIndicatorTargetMeasurement.Count == 0) return indicator;
+
             int row = indicator.ImportantIndicatorTargetMeasurement.Count / 5;
             int currentPoint = 0;
             int childRange = 0;
@@ -268,6 +269,24 @@ namespace MRT_Demo.Controllers
             indicator.ImportantIndicatorTargetMeasurement = imTargetCopy;
             return indicator;
 
+        }
+
+        private void InitDropdownListStatic(Indicator indicator)
+        {
+            foreach (var i in indicator.IndicatorXIndicatorType)
+            {
+                if (i.IsCheck)
+                {
+                    SelectListItem selectListItem = new SelectListItem() { Text = i.IndicatorType.IndicatorType1, Value = i.IndicatorTypeID.ToString() };
+                    _IndicatorTypeDropdownList.Add(selectListItem);
+                }
+            }
+
+            foreach (var i in indicator.IndicatorUnit)
+            {
+                SelectListItem selectListItem = new SelectListItem() { Text = i.Unit, Value = i.ID.ToString() };
+                _IndicatorUnitDropdownList.Add(selectListItem);
+            }
         }
 
     }
