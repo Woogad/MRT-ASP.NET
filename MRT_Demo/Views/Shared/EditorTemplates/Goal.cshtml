@@ -1,0 +1,28 @@
+﻿@model MRT_Demo.Models.Goal
+
+@Html.HiddenFor(m => m.IsLastDelete)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+@Html.HiddenFor(m => m.StrategicObjectiveID)
+@Html.HiddenFor(m => m.NO)
+@Html.HiddenFor(m => m.IsDeleteGoal, new { Value = false })
+@if (Model.IsDelete == false)
+{
+    <tr>
+        <td>
+            @Html.EditorFor(m => m.Goal1,new { htmlAttributes = new {required = "required"} })
+        </td>
+        <td>
+            indic
+        </td>
+        <td>
+            <input type="submit" value="ลบ" onclick="DeleteGoal(@Html.IdFor(m => m.IsDeleteGoal))" />
+        </td>
+    </tr>
+}
+else
+{
+    @Html.HiddenFor(m => m.Goal1)
+}

@@ -1,0 +1,57 @@
+﻿@model List<MRT_Demo.Models.StrategicObjective>
+
+@{
+    ViewBag.Title = "Index";
+    int SOEPlanID = ViewBag.SOEPlanID;
+    string SearchResult = ViewBag.SearchResult;
+}
+
+<h2>วัตถุประสงค์เชิงยุทธศาสตร์</h2>
+<h2>StrategicObjective Index</h2>
+@Html.ActionLink("กล่องขยะ", "RecycleBin")
+@Html.ActionLink("เพิ่ม", "Create")
+@using (Html.BeginForm("Index", "StrategicObjective"))
+{
+    <label for=""></label>
+    <input type="text" id="searchName" name="searchName" placeholder="ค้นหา" />
+    @Html.Hidden("sOEPlanID",SOEPlanID)
+    <input type="submit" value="ค้นหา" />
+}
+@Html.DisplayName(SearchResult)
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    วันที่ปรับปรุง
+                </th>
+                <th>
+                    วัตถุประสงค์เชิงยุทธศาสตร์
+                </th>
+                <th>
+                    จัดการ
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => i.UpdateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.StrategicObjective1)
+                    </td>
+                    <td>
+                        @Html.ActionLink("แก้ไข", "Edit", new { id = i.ID })
+                        @Html.ActionLink("เป้าประสงค์", "Manage", "Goal", new { StrategicObjectiveID = i.ID }, "")
+                        @Html.ActionLink("ยุทธศาสตร์", "Index", "Strategy", new { StrategicObjectiveID = i.ID }, "")
+                        @Html.ActionLink("ลบ", "Delete", new { id = i.ID })
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

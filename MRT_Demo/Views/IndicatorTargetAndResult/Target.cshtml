@@ -1,0 +1,27 @@
+﻿@model MRT_Demo.Models.Indicator
+
+@{
+    ViewBag.Title = "Target";
+
+}
+
+<script>
+    function AddTargetMeasurement() {
+        $("#targetForm").attr("action", '@Url.Action("AddTargetMeasurement","IndicatorTargetAndResult")');
+        $("#targetForm").submit();
+    }
+    function DeleteTargetMeasurement(m) {
+        m.value = true;
+        $("#targetForm").attr("action", '@Url.Action("DeleteTargetMeasurement","IndicatorTargetAndResult")');
+        $("#targetForm").submit();
+    }
+</script>
+
+<h2>Target</h2>
+
+@using (Html.BeginForm("Target", "IndicatorTargetAndResult", FormMethod.Post, new { id = "targetForm" }))
+{
+    @Html.EditorFor(m => m, "IndicatorTarget", new {Disable = false })
+}
+
+

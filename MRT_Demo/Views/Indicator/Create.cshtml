@@ -1,0 +1,34 @@
+﻿@model MRT_Demo.Models.Indicator
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Indicator</h2>
+<script>
+    function AddOwner() {
+        $("#indicatorForm").attr("action", '@Url.Action("AddOwner","Indicator")');
+        $("#indicatorForm").submit();
+    }
+    function DeleteOwner(m) {
+        m.value = true;
+        $("#indicatorForm").attr("action", '@Url.Action("DeleteOwner","Indicator")');
+        $("#indicatorForm").submit();
+    }
+
+    function AddUnit() {
+        $("#indicatorForm").attr("action", '@Url.Action("AddUnit","Indicator")');
+        $("#indicatorForm").submit();
+    }
+    function DeleteUnit(m) {
+        m.value = true;
+        $("#indicatorForm").attr("action", '@Url.Action("DeleteUnit","Indicator")');
+        $("#indicatorForm").submit();
+    }
+</script>
+
+@using (Html.BeginForm("Create","Indicator",FormMethod.Post,new {id = "indicatorForm"}))
+{
+    @Html.EditorFor(m => m)
+    <input class="mt-5" type="submit" value="บันทึก" />
+}

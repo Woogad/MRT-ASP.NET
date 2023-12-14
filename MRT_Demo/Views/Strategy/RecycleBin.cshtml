@@ -1,0 +1,42 @@
+﻿@model List<MRT_Demo.Models.Strategy>
+
+@{
+    ViewBag.Title = "RecycleBin";
+}
+
+<h2>RecycleBin Strategy</h2>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#ID</th>
+                <th>วันที่ลบ</th>
+                <th>ยุทธศาสตร์</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => i.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.UpdateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.Strategy1)
+                    </td>
+                    <td>
+                        @Html.ActionLink("ยกเลิก", "Recover", new { id = i.ID }, new { @class = "mx-2" })
+                        @Html.ActionLink("ลบ", "LastDelete", new { id = i.ID }, new { @class = "mx-2" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

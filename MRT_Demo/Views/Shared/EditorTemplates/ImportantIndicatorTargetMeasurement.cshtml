@@ -1,0 +1,86 @@
+﻿@model MRT_Demo.Models.ImportantIndicatorTargetMeasurement
+
+@{
+    List<SelectListItem> indicatorTypeDropdownList = ViewBag.IndicatorTypeDropdownList;
+    List<SelectListItem> indicatorUnitDropdownList = ViewBag.IndicatorUnitDropdownList;
+    var ID = 0;
+    bool IsDisabled = ViewBag.Disable;
+}
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsDeleteTarget, new { Value = false })
+@Html.HiddenFor(m => m.IsDispaly)
+
+@if (Model.IsDelete == false)
+{
+    <tr>
+        <td>
+            @if (IsDisabled)
+            {
+
+                @Html.DropDownListFor(m => m.IndicatorTypeID, indicatorTypeDropdownList, new { disabled = "disabled" })
+            }
+            else
+            {
+                if (Model.IsDispaly)
+                {
+                    @Html.HiddenFor(m => m.IndicatorTypeID)
+                    @Html.DropDownListFor(m => m.IndicatorTypeID, indicatorTypeDropdownList, new { disabled = "disabled" })
+                }
+                else
+                {
+                    indicatorTypeDropdownList.First().Selected = true;
+                    @Html.DropDownListFor(m => m.IndicatorTypeID, indicatorTypeDropdownList, new { })
+                }
+            }
+        </td>
+        <td>
+            @if (IsDisabled)
+            {
+                @Html.DropDownListFor(m => m.IndicatorUnitID, indicatorUnitDropdownList, new { disabled = "disabled" })
+            }
+            else
+            {
+                if (Model.IsDispaly)
+                {
+                    @Html.HiddenFor(m => m.IndicatorUnitID)
+                    @Html.DropDownListFor(m => m.IndicatorUnitID, indicatorUnitDropdownList, new { disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.IndicatorUnitID, indicatorUnitDropdownList, new { })
+                }
+            }
+        </td>
+        @foreach (var item in Model.TargetList)
+        {
+            <td>
+                @Html.EditorFor(m => item, "TargetList", "TargetList[" + ID++ + "]", new { Disable = IsDisabled })
+            </td>
+        }
+        @if (IsDisabled)
+        {
+            <td>
+                <input type="submit" value="ลบ" onclick="DeleteTargetMeasurement(@Html.IdFor(m => m.IsDeleteTarget) )" disabled />
+            </td>
+        }
+        else
+        {
+            <td>
+                <input type="submit" value="ลบ" onclick="DeleteTargetMeasurement(@Html.IdFor(m => m.IsDeleteTarget) )" />
+            </td>
+        }
+    </tr>
+}
+else
+{
+    @Html.HiddenFor(m => m.IndicatorTypeID)
+    @Html.HiddenFor(m => m.IndicatorUnitID)
+    foreach (var item in Model.TargetList)
+    {
+        <td hidden>
+            @Html.EditorFor(m => item, "TargetList", "TargetList[" + ID++ + "]", new { })
+        </td>
+    }
+}
+

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a17b860b1e304157a4a08d0f34043b04" Name="Diagram1" ZoomLevel="64">
+        <EntityTypeShape EntityType="MRTModel.ForecastAnalysisResultFile" Width="1.5" PointX="12" PointY="9.875" />
+        <EntityTypeShape EntityType="MRTModel.ForecastChangeActionPlanFile" Width="1.5" PointX="12" PointY="13.625" />
+        <EntityTypeShape EntityType="MRTModel.ForecastPeriod" Width="1.5" PointX="7.5" PointY="9.75" />
+        <EntityTypeShape EntityType="MRTModel.ForecastPeriodCompetitorValue" Width="1.5" PointX="9.75" PointY="2.75" />
+        <EntityTypeShape EntityType="MRTModel.ForecastPeriodDocFile" Width="1.5" PointX="12" PointY="6.25" />
+        <EntityTypeShape EntityType="MRTModel.ForecastPeriodResultRemark" Width="1.5" PointX="9.75" PointY="8.75" />
+        <EntityTypeShape EntityType="MRTModel.ForecastPeriodToolAndMethod" Width="1.5" PointX="14.75" PointY="9.875" />
+        <EntityTypeShape EntityType="MRTModel.ForecastTool" Width="1.5" PointX="12.5" PointY="2.25" />
+        <EntityTypeShape EntityType="MRTModel.ForecastValueAndRealValue" Width="1.5" PointX="9.75" PointY="17.375" />
+        <EntityTypeShape EntityType="MRTModel.Goal" Width="1.5" PointX="19.25" PointY="5.25" />
+        <EntityTypeShape EntityType="MRTModel.ImportantIndicatorResultMeasurement" Width="1.5" PointX="5.25" PointY="21.875" />
+        <EntityTypeShape EntityType="MRTModel.ImportantIndicatorTargetMeasurement" Width="1.5" PointX="7.5" PointY="36.5" />
+        <EntityTypeShape EntityType="MRTModel.Indicator" Width="1.5" PointX="3" PointY="21.25" />
+        <EntityTypeShape EntityType="MRTModel.IndicatorDetailStatus" Width="1.5" PointX="0.75" PointY="22.25" />
+        <EntityTypeShape EntityType="MRTModel.IndicatorOwner" Width="1.5" PointX="5.25" PointY="41" />
+        <EntityTypeShape EntityType="MRTModel.IndicatorType" Width="1.5" PointX="6" PointY="18.125" />
+        <EntityTypeShape EntityType="MRTModel.IndicatorUnit" Width="1.5" PointX="5.25" PointY="52.75" />
+        <EntityTypeShape EntityType="MRTModel.IndicatorXIndicatorType" Width="1.5" PointX="8.25" PointY="21.75" />
+        <EntityTypeShape EntityType="MRTModel.PeriodMountOrQuarterOrYear" Width="1.5" PointX="3" PointY="17.25" />
+        <EntityTypeShape EntityType="MRTModel.PredicOwner" Width="1.5" PointX="5.25" PointY="49.25" />
+        <EntityTypeShape EntityType="MRTModel.SOEPlan" Width="1.5" PointX="14.75" PointY="3.375" />
+        <EntityTypeShape EntityType="MRTModel.StrategicObjective" Width="1.5" PointX="17" PointY="3" />
+        <EntityTypeShape EntityType="MRTModel.Strategy" Width="1.5" PointX="19.25" PointY="1.125" />
+        <EntityTypeShape EntityType="MRTModel.Tactic" Width="1.5" PointX="21.5" PointY="1.25" />
+        <AssociationConnector Association="MRTModel.FK_ForecastAnalysisResultFile_ForecastPeriodResultRemark" />
+        <AssociationConnector Association="MRTModel.FK_ForecastChangeActionPlanFile_ForecastPeriodResultRemark" />
+        <AssociationConnector Association="MRTModel.FK_ForecastPeriodCompetitorValue_ForecastPeriod" />
+        <AssociationConnector Association="MRTModel.FK_ForecastPeriodResultRemark_ForecastPeriod" />
+        <AssociationConnector Association="MRTModel.FK_ForecastPeriodToolAndMethod_ForecastPeriod" />
+        <AssociationConnector Association="MRTModel.FK_ForecastValueAndRealValue_ForecastPeriod" />
+        <AssociationConnector Association="MRTModel.FK_ImportantIndicatorResultMeasurement_ForecastPeriod" />
+        <AssociationConnector Association="MRTModel.FK_ForecastPeriodDocFile_ForecastPeriodResultRemark" />
+        <AssociationConnector Association="MRTModel.FK_ForecastPeriodToolAndMethod_ForecastTool" />
+        <AssociationConnector Association="MRTModel.FK_StrategicObjective_Goal" />
+        <AssociationConnector Association="MRTModel.FK_ImportantIndicatorResultMeasurement_Indicator" />
+        <AssociationConnector Association="MRTModel.FK_ImportantIndicatorResultMeasurement_PeriodMountOrQuarterOrYear" />
+        <AssociationConnector Association="MRTModel.FK_Indicator_ImportantIndicatorTargetMeasurement" />
+        <AssociationConnector Association="MRTModel.FK_IndicatorType_ImportantIndicatorTargetMeasurement" />
+        <AssociationConnector Association="MRTModel.FK_IndicatorUnit_ImportantIndicatorTargetMeasurement" />
+        <AssociationConnector Association="MRTModel.FK_Indicator_IndicatorOwner" />
+        <AssociationConnector Association="MRTModel.FK_Indicator_IndicatorUnit" />
+        <AssociationConnector Association="MRTModel.FK_Indicator_IndicatorXIndicatorType" />
+        <AssociationConnector Association="MRTModel.FK_Indicator_PredicOwner" />
+        <AssociationConnector Association="MRTModel.FK_IndicatorDetailStatus_Indicator" />
+        <AssociationConnector Association="MRTModel.FK_IndicatorType_IndicatorXIndicatorType" />
+        <AssociationConnector Association="MRTModel.FK_SOEPlan_StrategicObjective" />
+        <AssociationConnector Association="MRTModel.FK_StrategicObjective_Strategy" />
+        <AssociationConnector Association="MRTModel.FK_Strategy_Tactic" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

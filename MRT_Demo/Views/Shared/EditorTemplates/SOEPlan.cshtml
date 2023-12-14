@@ -1,0 +1,19 @@
+﻿@model MRT_Demo.Models.SOEPlan
+
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsLastDelete)
+@{ 
+    List<SelectListItem> StartyearList = ViewBag.StartyearList;
+    List<SelectListItem> EndyearList = ViewBag.EndyearList;
+}
+<div class="row">
+    <div class="form-group">
+        @Html.LabelFor(m => m.StartYear):
+        @Html.DropDownListFor(m => m.StartYear,StartyearList, new {@class ="form-control"})
+        <label for="EndYear">ถึง</label>
+        @Html.DropDownListFor(m => m.EndYear, EndyearList, new {@class ="form-control"})
+    </div>
+</div>

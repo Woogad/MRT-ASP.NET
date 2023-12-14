@@ -1,0 +1,27 @@
+﻿@model MRT_Demo.Models.IndicatorOwner
+
+@{
+    List<SelectListItem> divisionDropdownList = ViewBag.DivisionDropdownList;
+}
+
+@Html.HiddenFor(m => m.IsDeleteOwner, new { Value = false })
+@Html.HiddenFor(m=>m.IsDelete)
+@Html.HiddenFor(m=>m.ID)
+@Html.HiddenFor(m=>m.IndicatorID)
+@Html.HiddenFor(m=>m.CreateDate)
+@Html.HiddenFor(m=>m.UpdateDate)
+@if (Model.IsDelete == false)
+{
+    <tr>
+        <td>
+            @Html.DropDownListFor(m => m.Division, divisionDropdownList, new { @class = "form-control" })
+        </td>
+        <td>
+            <input type="submit" value="ลบ" onclick="DeleteOwner(@Html.IdFor(m => m.IsDeleteOwner))" />
+        </td>
+    </tr>
+}
+else
+{
+    @Html.HiddenFor(m => m.Division)
+}

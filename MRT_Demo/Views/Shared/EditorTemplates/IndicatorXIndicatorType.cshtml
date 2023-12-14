@@ -1,0 +1,18 @@
+﻿@model MRT_Demo.Models.IndicatorXIndicatorType
+
+@Html.HiddenFor(m => m.IndicatorTypeID)
+@Html.HiddenFor(m=> m.IndicatorType.IndicatorType1)
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.IndicatorID)
+@Html.HiddenFor(m => m.IndicatorType.ID)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsLastDelete)
+<tr>
+    <td>
+        @Html.CheckBoxFor(m => m.IsCheck)
+        @Html.DisplayFor(m => m.IndicatorType.IndicatorType1)
+    </td>
+    <td>
+        @Html.EditorFor(m => m.Definition)
+    </td>
+</tr>

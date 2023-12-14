@@ -1,0 +1,43 @@
+﻿@model MRT_Demo.Models.StrategicObjective
+
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>Manage StrategicObjective - Goal</h2>
+<script>
+    function AddGoal() {
+        $("#manageform").attr("action",'@Url.Action("AddGoal","Goal")');
+        $("#manageform").submit();
+
+    }
+    function DeleteGoal(m) {
+        m.value = true;
+        $("#manageform").attr("action",'@Url.Action("DeleteGoal","Goal")');
+        $("#manageform").submit();
+
+    }
+</script>
+
+@using (Html.BeginForm("Manage", "Goal", FormMethod.Post, new { id = "manageform" }))
+{
+
+    @Html.HiddenFor(m => m.SOEPlanID)
+    @Html.HiddenFor(m => m.ID)
+    @Html.DisplayForModel()
+    <input class="mt-5 mb-2" type="submit" value="เพิ่ม" onclick="AddGoal()" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Goal)</th>
+                <th>ตัวชี้วัด</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @Html.EditorFor(m => m.Goal)
+        </tbody>
+    </table>
+    <input type="submit" value="บันทึก" />
+}
+

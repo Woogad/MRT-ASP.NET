@@ -1,0 +1,13 @@
+﻿@model MRT_Demo.Models.StrategicObjective
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Strategic Objective</h2>
+
+@using (Html.BeginForm("Create","StrategicObjective",FormMethod.Post,new {id = "strategicObjectiveForm"}))
+{
+    @Html.EditorForModel()
+    <input type="submit" value="ตกลง" />
+}

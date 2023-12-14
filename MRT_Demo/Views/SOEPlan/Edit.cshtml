@@ -1,0 +1,13 @@
+﻿@model MRT_Demo.Models.SOEPlan
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit SOEPlan</h2>
+
+@using (Html.BeginForm("Edit","SOEPlan",FormMethod.Post,new {id = "soeplanform"}))
+{
+    @Html.EditorForModel()
+    <input type="submit" value="บันทึก" />
+}

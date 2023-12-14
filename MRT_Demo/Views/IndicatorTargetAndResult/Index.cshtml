@@ -1,0 +1,76 @@
+﻿@model IEnumerable<MRT_Demo.Models.Indicator>
+
+@{
+    ViewBag.Title = "Index";
+    MRT_Demo.Models.Indicator indicator = new MRT_Demo.Models.Indicator();
+    //List<SelectListItem> divisionDropdownList = ViewBag.DivisionDropdownList;
+}
+
+<h2>Index</h2>
+
+<h2>Index IndicatorTargetAndResult</h2>
+@using (Html.BeginForm("Index", "Indicator", FormMethod.Post, new { }))
+{
+    @*@Html.DropDownList("divisionSearch", divisionDropdownList, "", new { }*@
+    @Html.Editor("indicatorSearch")
+    <input type="submit" value="ค้นหา" />
+}
+<div>
+    @Html.ActionLink("กล่องขยะ", "RecycleBin")
+    @Html.ActionLink("เพิ่ม", "Create")
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#ID</th>
+                <th>@Html.DisplayNameFor(m => m.UpdateDate)</th>
+                <th>@Html.DisplayNameFor(m => m.Indicator1)</th>
+                <th>@Html.DisplayNameFor(m => m.IndicatorOwner)</th>
+                <th>@Html.DisplayNameFor(m => m.IsActive)</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => i.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.UpdateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.Indicator1)
+                    </td>
+                    <td>
+                        @{
+                            if (i.IndicatorOwner.Count > 0)
+                            {
+                                var temp = i.IndicatorOwner.Last();
+                                foreach (var j in i.IndicatorOwner)
+                                {
+                                    if (j.Equals(temp))
+                                    {
+                                        @Html.DisplayFor(m => j.Division)
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(m => j.Division) @Html.DisplayName(" , ")
+                                    }
+                                }
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.IsActive)
+                    </td>
+                    <td>
+                        @Html.ActionLink("เป้า", "Target", new { id = i.ID }, new { @class = "mx-2" })
+                        @Html.ActionLink("ผล", "Result", new { id = i.ID }, new { @class = "mx-2" })
+                        @Html.ActionLink("รายงาน", "Report", new { sOEPlan = i.ID }, new { @class = "mx-2" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

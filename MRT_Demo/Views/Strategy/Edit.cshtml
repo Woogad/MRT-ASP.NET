@@ -1,0 +1,26 @@
+﻿@model MRT_Demo.Models.Strategy
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit Strategy</h2>
+
+<script>
+    function DeleteTactic(m) {
+        m.value = true;
+        $("#strategyform").attr("action", '@Url.Action("DeleteTactic","Strategy")');
+        $("#strategyform").submit();
+    }
+    function AddTactic() {
+
+        $("#strategyform").attr("action", '@Url.Action("AddTactic","Strategy")');
+        $("#strategyform").submit();
+    }
+</script>
+@using (Html.BeginForm("Edit","Strategy",FormMethod.Post,new {id = "strategyform"}))
+{
+    @Html.EditorForModel()
+<input type="submit" value="บันทึก" />
+}
+

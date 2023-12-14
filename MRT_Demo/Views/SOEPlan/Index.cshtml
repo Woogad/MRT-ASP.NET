@@ -1,0 +1,45 @@
+﻿@model List<MRT_Demo.Models.SOEPlan>
+
+@{
+    ViewBag.Title = "Index";
+}
+<h4>แผนวิสาหกิจ</h4>
+<h4>SOEPlan Index</h4>
+
+<div>
+    @Html.ActionLink("กล่องขยะ", "RecycleBin")
+    @Html.ActionLink("เพิ่ม","Create")
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#ID</th>
+                <th>วันที่ปรับปรุง</th>
+                <th>ปี</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => i.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.UpdateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.StartYear)
+                        -
+                        @Html.DisplayFor(m => i.EndYear)
+                    </td>
+                    <td>
+                        @Html.ActionLink("แก้ไข", "Edit",new {id = i.ID},new {@class = "mx-2"})
+                        @Html.ActionLink("วัตถุประสงค์เชิงยุทธศาสตร์", "Index", "StrategicObjective", new { sOEPlanID = i.ID }, new { @class = "mx-2" })
+                        @Html.ActionLink("ลบ", "Delete", new { id = i.ID },new {@class = "mx-2"})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,33 @@
+﻿@model MRT_Demo.Models.Strategy
+
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsLastDelete)
+@Html.HiddenFor(m => m.StrategicObjectiveID)
+@Html.HiddenFor(m => m.NO)
+<div class="d-flex gap-2 mb-4">
+    @Html.LabelFor(m => m.Strategy1, new { @class = "" }):
+    @Html.EditorFor(m => m.Strategy1, new { @class = "col" })
+</div>
+<div class="col d-flex justify-content-end align-content-center">
+    <input class="mx-2" type="submit" value="เพิ่ม" onclick="AddTactic()" />
+</div>
+<div class="row d-flex gap-1">
+    <div class="col-sm-2">
+        @Html.DisplayNameFor(m => m.Tactic):
+    </div>
+    <table class="table col">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Tactic)</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @Html.EditorFor(m => m.Tactic)
+        </tbody>
+    </table>
+</div>
+

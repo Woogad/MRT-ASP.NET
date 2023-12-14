@@ -1,0 +1,125 @@
+﻿@model MRT_Demo.Models.Indicator
+@{
+    MRT_Demo.Models.IndicatorOwner indicatorOwner = new MRT_Demo.Models.IndicatorOwner();
+    List<SelectListItem> StatusIDDropdownList = ViewBag.StatusDropdownList;
+}
+
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsLastDelete)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.ID)
+<div class="container">
+    <div class="row justify-content-md-start mb-5">
+        @Html.LabelFor(m => m.Indicator1, new { @class = "col-md-3" })
+        @Html.EditorFor(m => m.Indicator1, new { htmlAttributes = new { @class = "col-md-5" } })
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+            <div class="">
+                @Html.DisplayNameFor(m => m.IndicatorOwner)
+            </div>
+            <div class="">
+                <input type="submit" value="เพิ่ม" onclick="AddOwner()" />
+            </div>
+        </div>
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => indicatorOwner.Division)
+                        </th>
+                        <th>
+                            จัดการ
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.EditorFor(m => m.IndicatorOwner)
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+            @Html.DisplayNameFor(m => m.IndicatorXIndicatorType)
+        </div>
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            เลือกประเภทตัวชี้วัด
+                        </th>
+                        @{
+                            MRT_Demo.Models.IndicatorXIndicatorType indicatorXIndicatorType = new MRT_Demo.Models.IndicatorXIndicatorType();
+                        }
+                        <th>
+                            @Html.DisplayNameFor(m => indicatorXIndicatorType.Definition)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.EditorFor(m => m.IndicatorXIndicatorType)
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+            @Html.DisplayNameFor(m => m.IndicatorUnit)
+            <input type="submit" value="เพิ่ม" onclick="AddUnit()" />
+        </div>
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => m.IndicatorUnit)
+                        </th>
+                        <th>
+                            จัดการ
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.EditorFor(m => m.IndicatorUnit)
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+            @Html.DisplayNameFor(m => m.Formula)
+        </div>
+        <div class="col">
+            @Html.EditorFor(m => m.Formula)
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+            @Html.DisplayNameFor(m => m.IndicatorDetailStatusID)
+        </div>
+        <div class="col">
+            @Html.DropDownListFor(m => m.IndicatorDetailStatusID, StatusIDDropdownList, new { })
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+
+        </div>
+        <div class="col">
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-sm-2">
+            @Html.DisplayNameFor(m => m.IsActive)
+        </div>
+        <div class="col">
+            @Html.RadioButtonFor(m => m.IsActive, true, new { @class = "mx-2" }) ใช้งาน
+            @Html.RadioButtonFor(m => m.IsActive, false, new { @class = "mx-2" }) ไม่ใช้งาน
+        </div>
+    </div>
+
+</div>

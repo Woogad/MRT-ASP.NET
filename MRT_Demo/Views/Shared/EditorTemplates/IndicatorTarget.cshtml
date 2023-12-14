@@ -1,0 +1,59 @@
+﻿@model MRT_Demo.Models.Indicator
+
+@{
+    MRT_Demo.Models.ImportantIndicatorTargetMeasurement importantIndicatorTargetMeasurement = new MRT_Demo.Models.ImportantIndicatorTargetMeasurement();
+    MRT_Demo.Models.IndicatorOwner indicatorOwner = new MRT_Demo.Models.IndicatorOwner();
+
+    bool IsDisabled = ViewBag.Disable;
+}
+@Html.HiddenFor(m => m.Indicator1)
+@Html.HiddenFor(m => m.ID)
+
+<table class="table-responsive-lg table-bordered ">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => indicatorOwner.Division)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.DisplayFor(m => m.IndicatorOwner)
+    </tbody>
+</table>
+
+@if (IsDisabled)
+{
+    //TODO Add RadioButton
+    <div>
+    </div>
+}
+else
+{
+    <div class="row d-flex justify-content-end">
+        <input type="submit" value="เพิ่ม" onclick="AddTargetMeasurement()" class="col-sm-1" />
+    </div>
+}
+
+<table class="table-responsive-lg table-bordered my-5">
+    <thead>
+        <tr class="">
+            <th rowspan="2">@Html.DisplayNameFor(m => importantIndicatorTargetMeasurement.IndicatorTypeID)</th>
+            <th rowspan="2">@Html.DisplayNameFor(m => importantIndicatorTargetMeasurement.IndicatorUnitID)</th>
+            <th colspan="5">@Html.DisplayNameFor(m => importantIndicatorTargetMeasurement.Target)</th>
+            <th rowspan="2">จัดการ</th>
+        </tr>
+        <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.EditorFor(m => m.ImportantIndicatorTargetMeasurement, new { Disable = IsDisabled })
+    </tbody>
+</table>
+@if (IsDisabled == false)
+{
+    <input type="submit" value="บันทึก" class="mt-3" />
+}

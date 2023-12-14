@@ -1,0 +1,43 @@
+﻿@model List<MRT_Demo.Models.Strategy>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h4>Stategy</h4>
+
+<div>
+    @Html.ActionLink("กล่องขยะ", "RecycleBin")
+    @Html.ActionLink("เพิ่ม","Create")
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#ID</th>
+                <th>วันที่ปรับปรุง</th>
+                <th>ยุทธศาสตร์</th>
+                <th>จัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => i.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => i.UpdateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m=> i.Strategy1)
+                    </td>
+                    <td>
+                        @Html.ActionLink("แก้ไข", "Edit",new {id = i.ID},new {@class = "mx-2"})
+                        @Html.ActionLink("ลบ", "Delete", new { id = i.ID },new {@class = "mx-2"})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

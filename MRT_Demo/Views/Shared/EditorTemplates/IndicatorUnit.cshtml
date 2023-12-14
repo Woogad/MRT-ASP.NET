@@ -1,0 +1,27 @@
+﻿@model MRT_Demo.Models.IndicatorUnit
+
+@Html.HiddenFor(m => m.IsDeleteUnit, new { Value = false })
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.IndicatorID)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+@if (Model.IsDelete == false)
+{
+
+    <tr>
+        <td>
+            @Html.EditorFor(m => m.Unit, new
+            {
+                HtmlAttributes = new { required = "required" }
+            })
+        </td>
+        <td>
+            <input type="submit" value="ลบ" onclick="DeleteUnit(@Html.IdFor(m=>m.IsDeleteUnit))" />
+        </td>
+    </tr>
+}
+else
+{
+    @Html.HiddenFor(m => m.Unit)
+}

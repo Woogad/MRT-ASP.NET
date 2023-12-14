@@ -1,0 +1,10 @@
+﻿@model MRT_Demo.Models.IndicatorOwner
+
+@if (Model.IsDelete == false)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(m => m.Division, new { @class = "form-control" })
+        </td>
+    </tr>
+}

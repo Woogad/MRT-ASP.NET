@@ -1,0 +1,16 @@
+﻿@model MRT_Demo.Models.Indicator
+
+@{
+    List<string> Months = new List<string>()
+{
+      "ต.ค", "พ.ย", "ธ.ค", "ม.ค", "ก.พ", "มี.ค", "เม.ย", "พ.ค", "มิ.ย", "ก.ค", "ส.ค", "ก.ย"
+};
+
+}
+
+<div>
+    @foreach (var i in Months)
+    {
+        <input value=@i type="submit" onclick="" />
+    }
+</div>

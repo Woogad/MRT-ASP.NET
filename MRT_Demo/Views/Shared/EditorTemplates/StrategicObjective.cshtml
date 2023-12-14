@@ -1,0 +1,13 @@
+﻿@model MRT_Demo.Models.StrategicObjective
+
+@Html.HiddenFor(m => m.SOEPlanID)
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsLastDelete)
+@Html.HiddenFor(m => m.NO)
+<div class="d-flex gap-2">
+    @Html.LabelFor(m => m.StrategicObjective1, new { @class = "" }):
+    @Html.EditorFor(m => m.StrategicObjective1, new { htmlAttributes = new { @class = "col-6", required = "required" } })
+</div>
