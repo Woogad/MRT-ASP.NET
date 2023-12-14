@@ -1,0 +1,35 @@
+﻿@model MRT_Demo.Models.PredicOwner
+
+@{
+    List<SelectListItem> predicOwnerDropdownList = ViewBag.PredicOwnerDropdownList;
+    bool IsDisabled = ViewBag.Disable;
+}
+
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IndicatorID)
+@Html.HiddenFor(m => m.IsDeletePredicOwner, new { Value = false })
+
+@if (Model.IsDelete == false)
+{
+    <tr>
+        <td>
+            @if (IsDisabled)
+            {
+                @Html.DropDownListFor(m => m.Division, predicOwnerDropdownList, new { disabled = "disabled" })
+            }
+            else
+            {
+                @Html.DropDownListFor(m => m.Division, predicOwnerDropdownList, new { })
+            }
+        </td>
+        <td>
+            <input type="submit" value="ลบ" onclick="DeletePredictOwner(@Html.IdFor(m => m.IsDeletePredicOwner))" />
+        </td>
+    </tr>
+}
+else
+{
+    @Html.HiddenFor(m => m.Division)
+}
