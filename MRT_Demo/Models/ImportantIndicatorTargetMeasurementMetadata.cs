@@ -27,6 +27,7 @@ namespace MRT_Demo.Models
     {
         public bool IsDeleteTarget {  get; set; }
         public bool IsDispaly { get; set; }
+        public bool IsUnCheck { get; set; }
         public List<ImportantIndicatorTargetMeasurement> TargetList { get; set; }
     }
 }

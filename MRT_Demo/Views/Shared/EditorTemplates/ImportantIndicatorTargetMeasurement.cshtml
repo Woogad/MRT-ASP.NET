@@ -10,9 +10,22 @@
 @Html.HiddenFor(m => m.IsDelete)
 @Html.HiddenFor(m => m.IsDeleteTarget, new { Value = false })
 @Html.HiddenFor(m => m.IsDispaly)
+@Html.HiddenFor(m => m.IsUnCheck)
 
 @if (Model.IsDelete == false)
 {
+    if (Model.IsUnCheck)
+    {
+        @Html.HiddenFor(m => m.IndicatorTypeID)
+        @Html.HiddenFor(m => m.IndicatorUnitID)
+        foreach (var item in Model.TargetList)
+        {
+            <td hidden>
+                @Html.EditorFor(m => item, "TargetList", "TargetList[" + ID++ + "]", new { })
+            </td>
+        }
+        return;
+    }
     <tr>
         <td>
             @if (IsDisabled)

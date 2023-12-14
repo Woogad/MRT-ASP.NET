@@ -50,10 +50,19 @@ namespace MRT_Demo.Controllers
 
             if (indicator.ImportantIndicatorTargetMeasurement.Count > 0)
             {
+                int indexPointer = 0;
                 indicator = SetupTargetMeasurementFromDB(indicator);
-                for (int i = 0; i < indicator.IndicatorXIndicatorType.Count; i++)
+                foreach (var i in indicator.IndicatorXIndicatorType)
                 {
-                    indicator.ImportantIndicatorTargetMeasurement.ToList()[i + 1].IsDispaly = true;
+                    if (i.IsCheck)
+                    {
+                        indicator.ImportantIndicatorTargetMeasurement.ToList()[indexPointer].IsDispaly = true;
+                    }
+                    else
+                    {
+                        indicator.ImportantIndicatorTargetMeasurement.ToList()[indexPointer].IsUnCheck = true;
+                    }
+                    indexPointer++;
                 }
             }
             else
@@ -61,14 +70,17 @@ namespace MRT_Demo.Controllers
                 List<ImportantIndicatorTargetMeasurement> temp = new List<ImportantIndicatorTargetMeasurement>();
                 foreach (var i in indicator.IndicatorXIndicatorType)
                 {
-                    if (i.IsCheck)
+                    var imTargetTypeDisplay = InitImportantIndicatorTargetMeasurementRow();
+                    imTargetTypeDisplay.IndicatorTypeID = i.IndicatorTypeID;
+                    imTargetTypeDisplay.IsDispaly = true;
+                    imTargetTypeDisplay.IndicatorID = indicator.ID;
+
+                    if (i.IsCheck == false)
                     {
-                        var imTargetTypeDisplay = InitImportantIndicatorTargetMeasurementRow();
-                        imTargetTypeDisplay.IndicatorTypeID = i.IndicatorTypeID;
-                        imTargetTypeDisplay.IsDispaly = true;
-                        imTargetTypeDisplay.IndicatorID = indicator.ID;
-                        temp.Add(imTargetTypeDisplay);
+                        imTargetTypeDisplay.IsUnCheck = true;
                     }
+                    temp.Add(imTargetTypeDisplay);
+
                 }
                 temp.AddRange(indicator.ImportantIndicatorTargetMeasurement.ToList());
                 indicator.ImportantIndicatorTargetMeasurement = temp;
