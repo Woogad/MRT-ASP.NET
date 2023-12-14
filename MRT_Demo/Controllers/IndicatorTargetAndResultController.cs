@@ -48,17 +48,22 @@ namespace MRT_Demo.Controllers
                 return HttpNotFound();
             }
 
+            if (indicator.PredicOwner.Count == 0)
+            {
+                PredicOwner predicOwner = new PredicOwner();
+                predicOwner.IndicatorID = indicator.ID;
+                predicOwner.IsDelete = false;
+                indicator.PredicOwner.Add(predicOwner);
+            }
+
             if (indicator.ImportantIndicatorTargetMeasurement.Count > 0)
             {
                 int indexPointer = 0;
                 indicator = SetupTargetMeasurementFromDB(indicator);
                 foreach (var i in indicator.IndicatorXIndicatorType)
                 {
-                    if (i.IsCheck)
-                    {
-                        indicator.ImportantIndicatorTargetMeasurement.ToList()[indexPointer].IsDispaly = true;
-                    }
-                    else
+                    indicator.ImportantIndicatorTargetMeasurement.ToList()[indexPointer].IsDispaly = true;
+                    if (i.IsCheck == false)
                     {
                         indicator.ImportantIndicatorTargetMeasurement.ToList()[indexPointer].IsUnCheck = true;
                     }
@@ -94,7 +99,36 @@ namespace MRT_Demo.Controllers
 
         public ActionResult AddPredictOwner(Indicator indicator)
         {
-            return View();
+            PredicOwner predicOwner = new PredicOwner();
+            predicOwner.IndicatorID = indicator.ID;
+            predicOwner.IsDelete = false;
+            indicator.PredicOwner.Add(predicOwner);
+
+            ViewbagDropdown();
+            return View(_SceneView, indicator);
+        }
+        public ActionResult DeletePredictOwner(Indicator indicator)
+        {
+            ModelState.Clear();
+            foreach (var i in indicator.PredicOwner)
+            {
+                if (i.IsDeletePredicOwner)
+                {
+                    if (i.ID == 0)
+                    {
+                        var tempList = indicator.PredicOwner.ToList();
+                        tempList.Remove(i);
+                        indicator.PredicOwner = tempList;
+                    }
+                    else
+                    {
+                        i.IsDelete = true;
+                    }
+                }
+            }
+
+            ViewbagDropdown();
+            return View(_SceneView, indicator);
         }
 
         public ActionResult AddTargetMeasurement(Indicator indicator)
@@ -131,6 +165,20 @@ namespace MRT_Demo.Controllers
         [HttpPost]
         public ActionResult Target(Indicator indicator)
         {
+            foreach (var i in indicator.PredicOwner)
+            {
+                i.UpdateDate = DateTime.Now;
+                if (i.ID == 0)
+                {
+                    i.CreateDate = DateTime.Now;
+                    db.PredicOwner.Add(i);
+                }
+                else
+                {
+                    db.Entry(i).State = EntityState.Modified;
+                }
+            }
+
             foreach (var i in indicator.ImportantIndicatorTargetMeasurement)
             {
                 if (i.IsDelete == true)

@@ -3,20 +3,31 @@
 @{
     MRT_Demo.Models.ImportantIndicatorTargetMeasurement importantIndicatorTargetMeasurement = new MRT_Demo.Models.ImportantIndicatorTargetMeasurement();
     MRT_Demo.Models.IndicatorOwner indicatorOwner = new MRT_Demo.Models.IndicatorOwner();
-
     bool IsDisabled = ViewBag.Disable;
 }
+
 @Html.HiddenFor(m => m.Indicator1)
 @Html.HiddenFor(m => m.ID)
 
+<div class="row d-flex justify-content-end">
+    @if (IsDisabled)
+    {
+        <input type="submit" value="เพิ่ม" class="col-sm-1" disabled />
+    }
+    else
+    {
+        <input type="submit" value="เพิ่ม" class="col-sm-1" onclick="AddPredictOwner()" />
+    }
+</div>
 <table class="table-responsive-lg table-bordered ">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(m => indicatorOwner.Division)</th>
+            <th>จัดการ</th>
         </tr>
     </thead>
     <tbody>
-        @Html.DisplayFor(m => m.IndicatorOwner)
+        @Html.EditorFor(m => m.PredicOwner, new { Disable = IsDisabled })
     </tbody>
 </table>
 
@@ -53,7 +64,7 @@ else
         @Html.EditorFor(m => m.ImportantIndicatorTargetMeasurement, new { Disable = IsDisabled })
     </tbody>
 </table>
-@if (IsDisabled == false)
+@if (!IsDisabled)
 {
     <input type="submit" value="บันทึก" class="mt-3" />
 }

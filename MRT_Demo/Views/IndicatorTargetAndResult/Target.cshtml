@@ -15,6 +15,15 @@
         $("#targetForm").attr("action", '@Url.Action("DeleteTargetMeasurement","IndicatorTargetAndResult")');
         $("#targetForm").submit();
     }
+    function AddPredictOwner() {
+        $("#targetForm").attr("action", '@Url.Action("AddPredictOwner","IndicatorTargetAndResult")');
+        $("#targetForm").submit();
+    }
+    function DeletePredictOwner(m) {
+        m.value = true;
+        $("#targetForm").attr("action", '@Url.Action("DeletePredictOwner","IndicatorTargetAndResult")');
+        $("#targetForm").submit();
+    }
 </script>
 
 <h2>Target</h2>
