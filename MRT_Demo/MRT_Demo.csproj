@@ -129,6 +129,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ForecastPeriodMetadata.cs" />
+    <Compile Include="Models\ImportantIndicatorResultMeasurementMetadata.cs" />
     <Compile Include="Models\PredicOwnerMetadata.cs" />
     <Compile Include="Models\ForecastAnalysisResultFile.cs">
       <DependentUpon>MRT.tt</DependentUpon>
@@ -332,6 +334,8 @@
     <Content Include="Views\IndicatorTargetAndResult\Result.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\IndicatorResult.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PredicOwner.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ImportantIndicatorResultMeasurement.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ForecastPeriod.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,10 @@
+﻿@model MRT_Demo.Models.ForecastPeriod
+
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.IsSelect)
+
+
+@if (Model.IsSelect == true)
+{
+    @Html.EditorFor(m => m.MountOrQuarterOrYear)
+}

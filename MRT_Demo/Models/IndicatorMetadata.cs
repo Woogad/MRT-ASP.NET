@@ -42,5 +42,7 @@ namespace MRT_Demo.Models
     [MetadataType(typeof(IndicatorMetadata))]
     public partial class Indicator
     {
+        public int PeriodSelected_Index { get; set; }
+        public int ForeCastPeriodSelected_Index { get; set; }
     }
 }

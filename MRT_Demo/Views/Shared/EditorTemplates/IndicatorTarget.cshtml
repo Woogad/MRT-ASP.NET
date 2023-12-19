@@ -10,11 +10,7 @@
 @Html.HiddenFor(m => m.ID)
 
 <div class="row d-flex justify-content-end">
-    @if (IsDisabled)
-    {
-        <input type="submit" value="เพิ่ม" class="col-sm-1" disabled />
-    }
-    else
+    @if (!IsDisabled)
     {
         <input type="submit" value="เพิ่ม" class="col-sm-1" onclick="AddPredictOwner()" />
     }
@@ -33,9 +29,18 @@
 
 @if (IsDisabled)
 {
-    //TODO Add RadioButton
-    <div>
-    </div>
+    for (int i = 0; i < Model.ImportantIndicatorResultMeasurement.Count; i++)
+    {
+        if (i == 0)
+        {
+            @Html.RadioButtonFor(m => m.PeriodSelected_Index, i , new { @class = "mx-2", onclick = "ChangePeriod()", @checked = true })
+        }
+        else
+        {
+            @Html.RadioButtonFor(m => m.PeriodSelected_Index, i , new { @class = "mx-2", onclick = "ChangePeriod()" })
+        }
+        @Html.DisplayFor(m => m.ImportantIndicatorResultMeasurement.ToList()[i].PMoYName)
+    }
 }
 else
 {
@@ -64,7 +69,3 @@ else
         @Html.EditorFor(m => m.ImportantIndicatorTargetMeasurement, new { Disable = IsDisabled })
     </tbody>
 </table>
-@if (!IsDisabled)
-{
-    <input type="submit" value="บันทึก" class="mt-3" />
-}

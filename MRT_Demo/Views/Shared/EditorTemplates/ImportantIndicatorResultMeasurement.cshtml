@@ -1,0 +1,12 @@
+﻿@model MRT_Demo.Models.ImportantIndicatorResultMeasurement
+@{
+    int quarterIndex = ViewBag.QuarterIndex;
+}
+
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.PMoYName)
+
+<div>
+    @Html.EditorFor(m => m.ForecastPeriod)
+</div>
+

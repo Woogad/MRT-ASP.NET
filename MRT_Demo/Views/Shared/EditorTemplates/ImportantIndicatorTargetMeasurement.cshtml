@@ -30,7 +30,7 @@
         <td>
             @if (IsDisabled)
             {
-
+                @Html.HiddenFor(m => m.IndicatorTypeID)
                 @Html.DropDownListFor(m => m.IndicatorTypeID, indicatorTypeDropdownList, new { disabled = "disabled" })
             }
             else

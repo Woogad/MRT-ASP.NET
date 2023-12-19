@@ -1,16 +1,13 @@
 ﻿@model MRT_Demo.Models.Indicator
 
 @{
-    List<string> Months = new List<string>()
-{
-      "ต.ค", "พ.ย", "ธ.ค", "ม.ค", "ก.พ", "มี.ค", "เม.ย", "พ.ค", "มิ.ย", "ก.ค", "ส.ค", "ก.ย"
-};
-
+    Dictionary<int, string> PeriodDic = ViewBag.PeriodDic;
 }
-
-<div>
-    @foreach (var i in Months)
+@Html.HiddenFor(m => m.ForeCastPeriodSelected_Index, new { Value = 0 })
+<div class="mb-3">
+    @foreach (KeyValuePair<int, string> i in PeriodDic)
     {
-        <input value=@i type="submit" onclick="" />
+        <input value="@i.Value" type="submit" onclick="ChangeMonthQuarterHailfYear(@Html.IdFor(m => m.ForeCastPeriodSelected_Index),@i.Key)" />
     }
 </div>
+@Html.EditorFor(m => m.ImportantIndicatorResultMeasurement, new { QuarterIndex = Model.PeriodSelected_Index })

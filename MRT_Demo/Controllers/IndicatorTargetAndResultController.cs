@@ -12,12 +12,39 @@ namespace MRT_Demo.Controllers
     public class indicatorTargetAndResultController : Controller
     {
         MRTEntities db = new MRTEntities();
+
         static string _SceneView = "";
         static int? _IndicatorID;
         static List<SelectListItem> _IndicatorTypeDropdownList = new List<SelectListItem>();
         static List<SelectListItem> _IndicatorUnitDropdownList = new List<SelectListItem>();
+        static Dictionary<int, Dictionary<int, string>> _PeriodDic = new Dictionary<int, Dictionary<int, string>>();
 
-        List<SelectListItem> _predicOwnerDropdownList = new List<SelectListItem>()
+        readonly Dictionary<int, string> _monthsDic = new Dictionary<int, string>() {
+            {0,"ต.ค" },
+            {1,"พ.ย" },
+            {2,"ธ.ค" },
+            {3,"ม.ค" },
+            {4,"ก.พ" },
+            {5,"มี.ค" },
+            {6,"เม.ย" },
+            {7,"พ.ค" },
+            {8,"มิ.ย" },
+            {9,"ก.ค" },
+            {10,"ส.ค" },
+            {11,"ก.ย" },
+        };
+        readonly Dictionary<int, string> _quartersDic = new Dictionary<int, string>() {
+            {0,"ไตรมาส 1" },
+            {1,"ไตรมาส 2" },
+            {2,"ไตรมาส 3" },
+            {3,"ไตรมาส 4" },
+        };
+        readonly Dictionary<int, string> _yearDic = new Dictionary<int, string>() {
+            {0,"ราย 6 เดือน" },
+            {1,"สิ้นปี" },
+        };
+
+        readonly List<SelectListItem> _predicOwnerDropdownList = new List<SelectListItem>()
         {
             new SelectListItem(){Text = "คาดการณ์หน่วย1"},
             new SelectListItem(){Text = "คาดการณ์หน่วย2"},
@@ -91,8 +118,8 @@ namespace MRT_Demo.Controllers
                 indicator.ImportantIndicatorTargetMeasurement = temp;
             }
 
-            InitDropdownListStatic(indicator);
-            ViewbagDropdown();
+            InitStatic(indicator);
+            ViewbagData();
 
             return View(indicator);
         }
@@ -104,7 +131,7 @@ namespace MRT_Demo.Controllers
             predicOwner.IsDelete = false;
             indicator.PredicOwner.Add(predicOwner);
 
-            ViewbagDropdown();
+            ViewbagData();
             return View(_SceneView, indicator);
         }
         public ActionResult DeletePredictOwner(Indicator indicator)
@@ -127,7 +154,7 @@ namespace MRT_Demo.Controllers
                 }
             }
 
-            ViewbagDropdown();
+            ViewbagData();
             return View(_SceneView, indicator);
         }
 
@@ -135,7 +162,7 @@ namespace MRT_Demo.Controllers
         {
             ModelState.Clear();
             indicator.ImportantIndicatorTargetMeasurement.Add(InitImportantIndicatorTargetMeasurementRow());
-            ViewbagDropdown();
+            ViewbagData();
             return View(_SceneView, indicator);
         }
 
@@ -158,7 +185,7 @@ namespace MRT_Demo.Controllers
                     }
                 }
             }
-            ViewbagDropdown();
+            ViewbagData();
             return View(_SceneView, indicator);
         }
 
@@ -221,6 +248,8 @@ namespace MRT_Demo.Controllers
 
         public ActionResult Result(int? id)
         {
+            ClearStatic();
+            _SceneView = "Result";
             if (id == null)
             {
                 return HttpNotFound();
@@ -233,17 +262,58 @@ namespace MRT_Demo.Controllers
                 return HttpNotFound();
             }
             indicator = SetupTargetMeasurementFromDB(indicator);
-            ViewbagDropdown();
+
+            foreach (var i in db.PeriodMountOrQuarterOrYear)
+            {
+                ImportantIndicatorResultMeasurement imResult = new ImportantIndicatorResultMeasurement()
+                {
+                    PeriodMounthOrQuarterOrYearID = i.ID,
+                    PMoYName = i.Period
+                };
+                indicator.ImportantIndicatorResultMeasurement.Add(imResult);
+            }
+
+            Dictionary<string, int> _PMoYRangeDic = new Dictionary<string, int>() {
+            {"รายเดือน",12 },
+            {"รายไตรมาส",4 },
+            {"รายปี",2 }, };
+
+            foreach (var i in indicator.ImportantIndicatorResultMeasurement)
+            {
+                if (_PMoYRangeDic.ContainsKey(i.PMoYName))
+                {
+                    int range = _PMoYRangeDic[i.PMoYName];
+                    for (int j = 0; j < range; j++)
+                    {
+                        i.ForecastPeriod.Add(new ForecastPeriod());
+                    }
+                }
+            }
+
+            indicator.PeriodSelected_Index = 0;
+            ViewbagPeriodDic(_monthsDic);
+
+            InitStatic(indicator);
+            ViewbagData();
             return View(indicator);
         }
 
         public ActionResult ChangePeriod(Indicator indicator)
         {
-            return View();
+
+            ViewbagPeriodDic(indicator);
+            ViewbagData();
+            return View(_SceneView, indicator);
         }
         public ActionResult ChangeMonthQuarterHailfYear(Indicator indicator)
         {
-            return View();
+            //Hell Index Search hehe
+            indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
+                .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index].IsSelect = true;
+
+            ViewbagPeriodDic(indicator);
+            ViewbagData();
+            return View(_SceneView, indicator);
         }
         public ActionResult AddCompetitorValue(Indicator indicator)
         {
@@ -255,7 +325,7 @@ namespace MRT_Demo.Controllers
         }
 
         [HttpPost]
-        public ActionResult Reuslt(Indicator indicator)
+        public ActionResult Result(Indicator indicator)
         {
             return View();
         }
@@ -264,11 +334,18 @@ namespace MRT_Demo.Controllers
             return View();
         }
 
-        private void ViewbagDropdown()
+        private void ViewbagData()
         {
             ViewBag.IndicatorTypeDropdownList = _IndicatorTypeDropdownList;
             ViewBag.IndicatorUnitDropdownList = _IndicatorUnitDropdownList;
             ViewBag.PredicOwnerDropdownList = _predicOwnerDropdownList;
+
+            Dictionary<string, int> PMoYID_dic = new Dictionary<string, int>();
+            foreach (var i in db.PeriodMountOrQuarterOrYear.ToList())
+            {
+                PMoYID_dic.Add(i.Period, i.ID);
+            }
+            ViewBag.PMoYID_dic = PMoYID_dic;
         }
 
         private void ClearStatic()
@@ -276,24 +353,25 @@ namespace MRT_Demo.Controllers
             _IndicatorID = null;
             _IndicatorTypeDropdownList.Clear();
             _IndicatorUnitDropdownList.Clear();
+            _PeriodDic.Clear();
         }
 
         private ImportantIndicatorTargetMeasurement InitImportantIndicatorTargetMeasurementRow()
         {
-            ImportantIndicatorTargetMeasurement importantIndicatorTargetMeasurement = new ImportantIndicatorTargetMeasurement();
+            ImportantIndicatorTargetMeasurement imTargetRow = new ImportantIndicatorTargetMeasurement();
 
             List<ImportantIndicatorTargetMeasurement> targetList = new List<ImportantIndicatorTargetMeasurement>();
             int range = 5;
 
             for (int i = 0; i < range; i++)
             {
-                ImportantIndicatorTargetMeasurement importantIndicatorTargetMeasurement1 = new ImportantIndicatorTargetMeasurement();
-                importantIndicatorTargetMeasurement1.IndicatorLevel = i + 1;
-                targetList.Add(importantIndicatorTargetMeasurement1);
+                ImportantIndicatorTargetMeasurement imTargetChild = new ImportantIndicatorTargetMeasurement();
+                imTargetChild.IndicatorLevel = i + 1;
+                targetList.Add(imTargetChild);
             }
-            importantIndicatorTargetMeasurement.TargetList = targetList;
-            importantIndicatorTargetMeasurement.IsDelete = false;
-            return importantIndicatorTargetMeasurement;
+            imTargetRow.TargetList = targetList;
+            imTargetRow.IsDelete = false;
+            return imTargetRow;
         }
 
         private Indicator SetupTargetMeasurementFromDB(Indicator indicator)
@@ -331,7 +409,7 @@ namespace MRT_Demo.Controllers
 
         }
 
-        private void InitDropdownListStatic(Indicator indicator)
+        private void InitStatic(Indicator indicator)
         {
             foreach (var i in indicator.IndicatorXIndicatorType)
             {
@@ -347,6 +425,20 @@ namespace MRT_Demo.Controllers
                 SelectListItem selectListItem = new SelectListItem() { Text = i.Unit, Value = i.ID.ToString() };
                 _IndicatorUnitDropdownList.Add(selectListItem);
             }
+
+            _PeriodDic.Add(0, _monthsDic);
+            _PeriodDic.Add(1, _quartersDic);
+            _PeriodDic.Add(2, _yearDic);
+        }
+
+        private void ViewbagPeriodDic(Indicator indicator)
+        {
+            ViewBag.PeriodDic = _PeriodDic[indicator.PeriodSelected_Index];
+        }
+
+        private void ViewbagPeriodDic(Dictionary<int, string> dic)
+        {
+            ViewBag.PeriodDic = dic;
         }
 
     }

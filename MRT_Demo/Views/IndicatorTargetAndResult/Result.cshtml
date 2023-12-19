@@ -4,10 +4,28 @@
     ViewBag.Title = "Result";
 }
 
+<script>
+    function ChangePeriod() {
+        $("#resultForm").attr("action", '@Url.Action("ChangePeriod","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+    }
+
+    function ChangeMonthQuarterHailfYear(m,k) {
+        m.value = k;
+        $("#resultForm").attr("action", '@Url.Action("ChangeMonthQuarterHailfYear","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+    }
+
+    @*function ChangeMonthQuarterHailfYear() {
+        $("#resultForm").attr("action", '@Url.Action("ChangeMonthQuarterHailfYear","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+    }*@
+</script>
 <h2>Result</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Result", "indicatorTargetAndResult", FormMethod.Post, new {id = "resultForm" }))
 {
     @Html.EditorFor(m => m,"IndicatorTarget",new {Disable = true})
     @Html.EditorFor(m => m, "IndicatorResult")
+    <input type="submit" value="บันทึก" class="mt-3" />
 }

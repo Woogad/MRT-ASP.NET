@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a17b860b1e304157a4a08d0f34043b04" Name="Diagram1" ZoomLevel="64">
+      <Diagram DiagramId="a17b860b1e304157a4a08d0f34043b04" Name="Diagram1" ZoomLevel="70">
         <EntityTypeShape EntityType="MRTModel.ForecastAnalysisResultFile" Width="1.5" PointX="12" PointY="9.875" />
         <EntityTypeShape EntityType="MRTModel.ForecastChangeActionPlanFile" Width="1.5" PointX="12" PointY="13.625" />
         <EntityTypeShape EntityType="MRTModel.ForecastPeriod" Width="1.5" PointX="7.5" PointY="9.75" />

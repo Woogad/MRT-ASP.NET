@@ -13,6 +13,7 @@
 @if (IsDisabled)
 {
     @Html.EditorFor(m => m.Target, new { HtmlAttributes = new { type = "number", step = "any", disabled = "disabled" } })
+    @Html.HiddenFor(m => m.Target)
 }
 else
 {
