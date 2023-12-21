@@ -1,0 +1,33 @@
+﻿@model MRT_Demo.Models.ForecastPeriodToolAndMethod
+
+@{
+    bool isDisplayTool = ViewBag.IsDisplayTool;
+
+}
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.FPToolName)
+@Html.HiddenFor(m => m.IsOtherTool)
+
+<div>
+    @if (isDisplayTool)
+    {
+        if (Model.IsOtherTool)
+        {
+            @Html.CheckBoxFor(m => m.IsUse, new { onclick = "CheckMethod(" + @Html.IdFor(m => m.Method) + ");" })
+            @Html.DisplayFor(m => m.FPToolName)
+            <br />
+            @Html.EditorFor(m => m.OtherTool)
+        }
+        else
+        {
+            @Html.CheckBoxFor(m => m.IsUse, new { onclick = "CheckMethod(" + @Html.IdFor(m => m.Method) + ");" })
+            @Html.DisplayFor(m => m.FPToolName)
+        }
+
+    }
+    else
+    {
+        @Html.EditorFor(m => m.Method, new { HtmlAttributes = new { disabled = "disabled" } })
+    }
+</div>
+
