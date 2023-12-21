@@ -16,7 +16,7 @@ namespace MRT_Demo.Models
     {
         public int ID { get; set; }
         public Nullable<int> ForecastPeriodID { get; set; }
-        public Nullable<bool> IsUse { get; set; }
+        public bool IsUse { get; set; }
         public Nullable<int> ForecastToolID { get; set; }
         public string OtherTool { get; set; }
         public string Method { get; set; }

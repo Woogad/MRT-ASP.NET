@@ -291,9 +291,24 @@ namespace MRT_Demo.Controllers
             }
 
             indicator.PeriodSelected_Index = 0;
-            ViewbagPeriodDic(_monthsDic);
+            indicator.ForeCastPeriodSelected_Index = 0;
+            indicator.ImportantIndicatorResultMeasurement.First().ForecastPeriod.First().IsSelect = true;
 
+            foreach (var i in indicator.ImportantIndicatorResultMeasurement)
+            {
+                foreach (var j in i.ForecastPeriod)
+                {
+                    foreach (var k in db.ForecastTool)
+                    {
+                        //!tool
+                        j.ForecastPeriodToolAndMethod.Add(new ForecastPeriodToolAndMethod() { FPToolName = k.ForecastTool1, ForecastToolID = k.ID });
+                    }
+                    //!other tool
+                    j.ForecastPeriodToolAndMethod.Add(new ForecastPeriodToolAndMethod() { FPToolName = "อื่นๆ โปรดระบุ", IsOtherTool = true });
+                }
+            }
             InitStatic(indicator);
+            ViewbagPeriodDic(indicator);
             ViewbagData();
             return View(indicator);
         }
@@ -307,7 +322,7 @@ namespace MRT_Demo.Controllers
         }
         public ActionResult ChangeMonthQuarterHailfYear(Indicator indicator)
         {
-            //Hell Index Search hehe
+            //Welcome to Hell Index Search hehe
             indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
                 .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index].IsSelect = true;
 
@@ -434,11 +449,6 @@ namespace MRT_Demo.Controllers
         private void ViewbagPeriodDic(Indicator indicator)
         {
             ViewBag.PeriodDic = _PeriodDic[indicator.PeriodSelected_Index];
-        }
-
-        private void ViewbagPeriodDic(Dictionary<int, string> dic)
-        {
-            ViewBag.PeriodDic = dic;
         }
 
     }

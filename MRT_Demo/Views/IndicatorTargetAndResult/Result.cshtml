@@ -15,17 +15,16 @@
         $("#resultForm").attr("action", '@Url.Action("ChangeMonthQuarterHailfYear","IndicatorTargetAndResult")');
         $("#resultForm").submit();
     }
+    function CheckMethod(method_id) {
+        method_id.disabled = !method_id.disabled;
+    }
 
-    @*function ChangeMonthQuarterHailfYear() {
-        $("#resultForm").attr("action", '@Url.Action("ChangeMonthQuarterHailfYear","IndicatorTargetAndResult")');
-        $("#resultForm").submit();
-    }*@
 </script>
 <h2>Result</h2>
 
-@using (Html.BeginForm("Result", "indicatorTargetAndResult", FormMethod.Post, new {id = "resultForm" }))
+@using (Html.BeginForm("Result", "indicatorTargetAndResult", FormMethod.Post, new { id = "resultForm" }))
 {
-    @Html.EditorFor(m => m,"IndicatorTarget",new {Disable = true})
+    @Html.EditorFor(m => m, "IndicatorTarget", new { Disable = true })
     @Html.EditorFor(m => m, "IndicatorResult")
     <input type="submit" value="บันทึก" class="mt-3" />
 }

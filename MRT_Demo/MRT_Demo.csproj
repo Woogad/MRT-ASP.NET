@@ -129,7 +129,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ForecastPeriodCompetitorValueMetadata.cs" />
+    <Compile Include="Models\ForecastPeriodToolAndMethodMetadata.cs" />
     <Compile Include="Models\ForecastPeriodMetadata.cs" />
+    <Compile Include="Models\ForecastValueAndRealValueMetadata.cs" />
     <Compile Include="Models\ImportantIndicatorResultMeasurementMetadata.cs" />
     <Compile Include="Models\PredicOwnerMetadata.cs" />
     <Compile Include="Models\ForecastAnalysisResultFile.cs">
@@ -330,12 +333,13 @@
     <Content Include="Views\Shared\EditorTemplates\ImportantIndicatorTargetMeasurement.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\IndicatorOwner.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\IndicatorTarget.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\TargetList.cshtml" />
     <Content Include="Views\IndicatorTargetAndResult\Result.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\IndicatorResult.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PredicOwner.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ImportantIndicatorResultMeasurement.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ForecastPeriod.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ForecastPeriodToolAndMethod.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TargetList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
