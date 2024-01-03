@@ -1,0 +1,24 @@
+﻿@model MRT_Demo.Models.ForecastPeriodCompetitorValue
+
+@Html.HiddenFor(m => m.isDeleteFPCValue, new { Value = false })
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.ForecastPeriodID)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+
+@if (Model.IsDelete == false)
+{
+    <tr>
+        <td>
+            @Html.EditorFor(m => m.Detail)
+        </td>
+        <td>
+            <input value="ลบ" type="submit" onclick="DeleteCompetitorValue(@Html.IdFor(m => m.isDeleteFPCValue))" />
+        </td>
+    </tr>
+}
+else
+{
+    @Html.HiddenFor(m => m.Detail)
+}

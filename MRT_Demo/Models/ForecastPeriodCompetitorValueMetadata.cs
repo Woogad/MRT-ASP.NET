@@ -16,6 +16,6 @@ namespace MRT_Demo.Models
     [MetadataType(typeof(ForecastPeriodCompetitorValueMetadata))]
     public partial class ForecastPeriodCompetitorValue
     {
-
+        public bool isDeleteFPCValue { get; set; }
     }
 }

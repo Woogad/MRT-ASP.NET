@@ -1,0 +1,61 @@
+﻿@model MRT_Demo.Models.ForecastPeriodResultRemark
+
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.ForecastPeriodID)
+@Html.HiddenFor(m => m.ForecastPeriodDocFile)
+@Html.HiddenFor(m => m.ForecastAnalysisResultFile)
+@Html.HiddenFor(m => m.ForecastChangeActionPlanFile)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.IsLastDelete)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
+
+<div>
+    <p>1.แผนงาน / โครงงาน / การดำเนินงานสำคัญ ที่ช่วยปรับปรุงการดำเนินงานของตัวชี้วัดนี้ยกมาเฉพาะที่สำคัญ กรุณาให้รายละเอียดถึงกิจกรรมนั้นพอสังเขป เช่น ดำเนินการอะไร มีผลตัวชี้วัดอย่างไร เป็นต้น</p>
+    @Html.EditorFor(m => m.HelpImproveIndicator)
+</div>
+<div>
+    <p>
+        2.การดำเนินงานตามแผนงาน / โครงงาน / กิจกรรมดังกล่าว เป็นไปด้วยดี หรือไม่<br />
+        -มีปัญหาอุปสรรคอะไรในโครงการ / แผนงานดังกล่าว (ระบุเฉพาะปัญหาสำคัญถ้ามี)<br />
+        -การแก้ไขปัญหาดังกล่าวดำเนินการอย่างไร
+    </p>
+    @Html.EditorFor(m => m.ProblemAndCorrection)
+</div>
+<div>
+    <p>3.ในปีที่ดำเนินการประเมิน นอกเหนือจากการดำเนินงานตามแผนงาน/ กิจกกรมดังกล่าวแล้ว มีปัจจัย/เหตุการณ์สำคัญทั้งภายนอกและภานในที่มีผลต่อการดำเนินงานของตัวชี้วัด</p>
+    @Html.EditorFor(m => m.ImportantFactorsAndEvents)
+</div>
+<div>
+    <p>4. @Html.DisplayNameFor(m => m.FilePeriodDoc)</p>
+    @*@Html.TextBoxFor(m => m.FilePeriodDoc, "", new { type = "file", onchange = "ChangeFile(" + Html.IdFor(m => m.FilePeriodDoc) + ")", multiple = "multiple", onclick = "this.value=null;" })*@
+    @Html.TextBoxFor(m => m.FilePeriodDoc, "", new { type = "file", multiple = "multiple" })
+</div>
+<div>
+    <p>5. @Html.DisplayNameFor(m => m.ReasonForToolChange)</p>
+    @Html.EditorFor(m => m.ReasonForToolChange)
+</div>
+<div>
+    <p>
+        6. ณ (งวดที่คาดการณ์) หากค่าคาดการณ์ผลการดำเนินงาน ณ สิ้นปีงบประมาณ ในคอลัมน์ค่าคาดการณ์ผลดำเนินงานจริงไม่เป็นไปตามเป้าหมายหรือต่ำกว่าระดับ RT<br />
+        ท่านดำเนินการอย่างไรเพื่อให้มีความสำเร็จตามเป้าหมายที่กำหนดไว้(หากคาดการณ์ไม่ได้ตามเป่าหมายต้องตอบข้อนี้)
+    </p>
+    @Html.CheckBoxFor(m => m.IsAnalysisResults) @Html.DisplayNameFor(m => m.IsAnalysisResults)<br />
+    @Html.EditorFor(m => m.AnalysisResults)<br />
+    @*@Html.TextBoxFor(m => m.FileAnalysisResults, "", new { type = "file", onchange = "ChangeFile(" + Html.IdFor(m => m.FileAnalysisResults) + ")", multiple = "multiple", onclick = "this.value=null;" })*@
+    @Html.TextBoxFor(m => m.FileAnalysisResults, "", new { type = "file", multiple = "multiple" })
+</div>
+<div>
+    @Html.CheckBoxFor(m => m.IsChangeActionPlan) @Html.DisplayNameFor(m => m.IsChangeActionPlan)<br />
+    @Html.EditorFor(m => m.ChangeActionPlan)<br />
+    @*@Html.TextBoxFor(m => m.FileChangeActionPlan, "", new { type = "file", onchange = "ChangeFile(" + Html.IdFor(m => m.FileChangeActionPlan) + ")", multiple = "multiple", onclick = "this.value=null;" })*@
+    @Html.TextBoxFor(m => m.FileChangeActionPlan, "", new { type = "file", multiple = "multiple" })
+</div>
+<div>
+    @Html.CheckBoxFor(m => m.IsChangeOperation) @Html.DisplayNameFor(m => m.IsChangeOperation)<br />
+    @Html.EditorFor(m => m.ChangeOperation)
+</div>
+<div>
+    @Html.CheckBoxFor(m => m.IsOther) @Html.DisplayNameFor(m => m.IsOther)<br />
+    @Html.EditorFor(m => m.Other)
+</div>

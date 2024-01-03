@@ -130,10 +130,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ForecastPeriodCompetitorValueMetadata.cs" />
+    <Compile Include="Models\ForecastPeriodResultRemarkMetadata.cs" />
     <Compile Include="Models\ForecastPeriodToolAndMethodMetadata.cs" />
     <Compile Include="Models\ForecastPeriodMetadata.cs" />
     <Compile Include="Models\ForecastValueAndRealValueMetadata.cs" />
     <Compile Include="Models\ImportantIndicatorResultMeasurementMetadata.cs" />
+    <Compile Include="Models\MRTFile.cs">
+      <DependentUpon>MRT.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PredicOwnerMetadata.cs" />
     <Compile Include="Models\ForecastAnalysisResultFile.cs">
       <DependentUpon>MRT.tt</DependentUpon>
@@ -340,9 +344,13 @@
     <Content Include="Views\Shared\EditorTemplates\ForecastPeriod.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ForecastPeriodToolAndMethod.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TargetList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ForecastValueAndRealValue.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ForecastPeriodCompetitorValue.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ForecastPeriodResultRemark.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="FilesUpload\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

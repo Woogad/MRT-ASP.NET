@@ -4,7 +4,11 @@
 }
 
 @Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.IndicatorID)
 @Html.HiddenFor(m => m.PMoYName)
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
 
 <div>
     @Html.EditorFor(m => m.ForecastPeriod)

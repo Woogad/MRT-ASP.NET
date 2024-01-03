@@ -49,5 +49,6 @@ namespace MRT_Demo.Models
         public virtual DbSet<StrategicObjective> StrategicObjective { get; set; }
         public virtual DbSet<Strategy> Strategy { get; set; }
         public virtual DbSet<Tactic> Tactic { get; set; }
+        public virtual DbSet<MRTFile> MRTFile { get; set; }
     }
 }

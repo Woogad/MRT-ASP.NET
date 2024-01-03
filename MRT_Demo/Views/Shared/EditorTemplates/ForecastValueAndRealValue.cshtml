@@ -1,0 +1,19 @@
+﻿@model MRT_Demo.Models.ForecastValueAndRealValue
+@{
+    List<SelectListItem> indicatorUnitDropdownList = ViewBag.IndicatorUnitDropdownList;
+}
+
+@Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.ForecastPeriodID)
+@Html.HiddenFor(m => m.UnitIndex)
+@Html.HiddenFor(m => m.IsDelete)
+<td>
+    <input value="@indicatorUnitDropdownList[Model.UnitIndex].Text" disabled />
+</td>
+
+<td>
+    @Html.EditorFor(m => m.RealValue)
+</td>
+<td>
+    @Html.EditorFor(m => m.ForecastValue)
+</td>

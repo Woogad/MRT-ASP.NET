@@ -2,32 +2,40 @@
 
 @{
     bool isDisplayTool = ViewBag.IsDisplayTool;
-
 }
 @Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.ForecastPeriodID)
+@Html.HiddenFor(m => m.IsDelete)
 @Html.HiddenFor(m => m.FPToolName)
 @Html.HiddenFor(m => m.IsOtherTool)
+@Html.HiddenFor(m => m.ForecastToolID)
 
-<div>
+<div class="py-2">
     @if (isDisplayTool)
     {
         if (Model.IsOtherTool)
         {
-            @Html.CheckBoxFor(m => m.IsUse, new { onclick = "CheckMethod(" + @Html.IdFor(m => m.Method) + ");" })
+            @Html.CheckBoxFor(m => m.IsUse, new { @class = "form-check-input", onchange = "CheckMethod(" + @Html.IdFor(m => m.Method) +");" })
             @Html.DisplayFor(m => m.FPToolName)
-            <br />
-            @Html.EditorFor(m => m.OtherTool)
+            @Html.EditorFor(m => m.OtherTool, new { HtmlAttributes = new { @class = "" } })
         }
         else
         {
-            @Html.CheckBoxFor(m => m.IsUse, new { onclick = "CheckMethod(" + @Html.IdFor(m => m.Method) + ");" })
+            @Html.CheckBoxFor(m => m.IsUse, new { @class = "form-check-input", onchange = "CheckMethod(" + @Html.IdFor(m => m.Method) +");" })
             @Html.DisplayFor(m => m.FPToolName)
         }
 
     }
     else
     {
-        @Html.EditorFor(m => m.Method, new { HtmlAttributes = new { disabled = "disabled" } })
+        if (Model.IsUse)
+        {
+            @Html.EditorFor(m => m.Method, new { HtmlAttributes = new { @class = "" } })
+        }
+        else
+        {
+            @Html.EditorFor(m => m.Method, new { HtmlAttributes = new { @class = "", disabled = "disabled" } })
+        }
     }
 </div>
 

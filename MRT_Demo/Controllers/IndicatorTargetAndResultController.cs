@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using System.IO;
+using System.Web.UI.WebControls;
 
 
 namespace MRT_Demo.Controllers
@@ -119,7 +121,7 @@ namespace MRT_Demo.Controllers
             }
 
             InitStatic(indicator);
-            ViewbagData();
+            ViewbagData(indicator);
 
             return View(indicator);
         }
@@ -131,7 +133,7 @@ namespace MRT_Demo.Controllers
             predicOwner.IsDelete = false;
             indicator.PredicOwner.Add(predicOwner);
 
-            ViewbagData();
+            ViewbagData(indicator);
             return View(_SceneView, indicator);
         }
         public ActionResult DeletePredictOwner(Indicator indicator)
@@ -154,7 +156,7 @@ namespace MRT_Demo.Controllers
                 }
             }
 
-            ViewbagData();
+            ViewbagData(indicator);
             return View(_SceneView, indicator);
         }
 
@@ -162,7 +164,7 @@ namespace MRT_Demo.Controllers
         {
             ModelState.Clear();
             indicator.ImportantIndicatorTargetMeasurement.Add(InitImportantIndicatorTargetMeasurementRow());
-            ViewbagData();
+            ViewbagData(indicator);
             return View(_SceneView, indicator);
         }
 
@@ -185,7 +187,7 @@ namespace MRT_Demo.Controllers
                     }
                 }
             }
-            ViewbagData();
+            ViewbagData(indicator);
             return View(_SceneView, indicator);
         }
 
@@ -254,102 +256,327 @@ namespace MRT_Demo.Controllers
             {
                 return HttpNotFound();
             }
+
             _IndicatorID = id;
             Indicator indicator = db.Indicator.Find(id);
             indicator.ImportantIndicatorTargetMeasurement = indicator.ImportantIndicatorTargetMeasurement.Where(s => s.IsDelete == false).ToList();
+            InitStatic(indicator);
+
             if (indicator == null)
             {
                 return HttpNotFound();
             }
             indicator = SetupTargetMeasurementFromDB(indicator);
 
-            foreach (var i in db.PeriodMountOrQuarterOrYear)
+            if (indicator.ImportantIndicatorResultMeasurement.Count == 0)
             {
-                ImportantIndicatorResultMeasurement imResult = new ImportantIndicatorResultMeasurement()
+                foreach (var i in db.PeriodMountOrQuarterOrYear)
                 {
-                    PeriodMounthOrQuarterOrYearID = i.ID,
-                    PMoYName = i.Period
-                };
-                indicator.ImportantIndicatorResultMeasurement.Add(imResult);
-            }
-
-            Dictionary<string, int> _PMoYRangeDic = new Dictionary<string, int>() {
-            {"รายเดือน",12 },
-            {"รายไตรมาส",4 },
-            {"รายปี",2 }, };
-
-            foreach (var i in indicator.ImportantIndicatorResultMeasurement)
-            {
-                if (_PMoYRangeDic.ContainsKey(i.PMoYName))
-                {
-                    int range = _PMoYRangeDic[i.PMoYName];
-                    for (int j = 0; j < range; j++)
+                    ImportantIndicatorResultMeasurement imResult = new ImportantIndicatorResultMeasurement()
                     {
-                        i.ForecastPeriod.Add(new ForecastPeriod());
+                        PeriodMounthOrQuarterOrYearID = i.ID,
+                        PMoYName = i.Period
+                    };
+                    indicator.ImportantIndicatorResultMeasurement.Add(imResult);
+                }
+
+                Dictionary<string, int> _PMoYRangeDic = new Dictionary<string, int>() {
+                    {"รายเดือน",12 },
+                    {"รายไตรมาส",4 },
+                    {"รายปี",2 }, };
+
+                foreach (var i in indicator.ImportantIndicatorResultMeasurement)
+                {
+                    if (_PMoYRangeDic.ContainsKey(i.PMoYName))
+                    {
+                        int range = _PMoYRangeDic[i.PMoYName];
+                        for (int j = 0; j < range; j++)
+                        {
+                            i.ForecastPeriod.Add(new ForecastPeriod() { IsDelete = false});
+                        }
                     }
                 }
+                foreach (var i in indicator.ImportantIndicatorResultMeasurement)
+                {
+                    foreach (var j in i.ForecastPeriod)
+                    {
+                        j.ForecastPeriodToolAndMethod = InitForecastPeriodMethodList();
+                        j.ForecastValueAndRealValue = InitForecastValueAndRealValueList();
+                        j.ForecastPeriodCompetitorValue.Add(new ForecastPeriodCompetitorValue() { IsDelete = false });
+                        j.ForecastPeriodResultRemark.Add(new ForecastPeriodResultRemark() { IsDelete = false, IsLastDelete = false });
+                    }
+                }
+            }
+            else
+            {
+                var PMoQoYList = db.PeriodMountOrQuarterOrYear.ToList();
+                var FPToolList = db.ForecastTool.ToList();
+                if (PMoQoYList == null || FPToolList == null)
+                {
+                    return HttpNotFound();
+                }
+
+                for (int i = 0; i < indicator.ImportantIndicatorResultMeasurement.Count; i++)
+                {
+                    indicator.ImportantIndicatorResultMeasurement.ToList()[i].PMoYName = PMoQoYList[i].Period;
+                    foreach (var j in indicator.ImportantIndicatorResultMeasurement.ToList()[i].ForecastPeriod)
+                    {
+                        for (int h = 0; h < j.ForecastPeriodToolAndMethod.Count; h++)
+                        {
+                            if (h > FPToolList.Count - 1)
+                            {
+                                j.ForecastPeriodToolAndMethod.ToList()[h].FPToolName = "อื่นๆ โปรดระบุ";
+                                j.ForecastPeriodToolAndMethod.ToList()[h].IsOtherTool = true;
+                            }
+                            else
+                            {
+                                j.ForecastPeriodToolAndMethod.ToList()[h].FPToolName = FPToolList[h].ForecastTool1;
+                            }
+                        }
+                    }
+                }
+
             }
 
             indicator.PeriodSelected_Index = 0;
             indicator.ForeCastPeriodSelected_Index = 0;
-            indicator.ImportantIndicatorResultMeasurement.First().ForecastPeriod.First().IsSelect = true;
+            SetForeCastPeriodSelectedIndexTrue(indicator);
 
-            foreach (var i in indicator.ImportantIndicatorResultMeasurement)
-            {
-                foreach (var j in i.ForecastPeriod)
-                {
-                    foreach (var k in db.ForecastTool)
-                    {
-                        //!tool
-                        j.ForecastPeriodToolAndMethod.Add(new ForecastPeriodToolAndMethod() { FPToolName = k.ForecastTool1, ForecastToolID = k.ID });
-                    }
-                    //!other tool
-                    j.ForecastPeriodToolAndMethod.Add(new ForecastPeriodToolAndMethod() { FPToolName = "อื่นๆ โปรดระบุ", IsOtherTool = true });
-                }
-            }
-            InitStatic(indicator);
-            ViewbagPeriodDic(indicator);
-            ViewbagData();
+            ViewbagData(indicator);
             return View(indicator);
         }
 
         public ActionResult ChangePeriod(Indicator indicator)
         {
+            indicator.ForeCastPeriodSelected_Index = 0;
+            SetForeCastPeriodSelectedIndexTrue(indicator);
 
-            ViewbagPeriodDic(indicator);
-            ViewbagData();
+            ViewbagData(indicator);
             return View(_SceneView, indicator);
         }
         public ActionResult ChangeMonthQuarterHailfYear(Indicator indicator)
         {
-            //Welcome to Hell Index Search hehe
-            indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
-                .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index].IsSelect = true;
+            SetForeCastPeriodSelectedIndexTrue(indicator);
 
-            ViewbagPeriodDic(indicator);
-            ViewbagData();
+            ViewbagData(indicator);
             return View(_SceneView, indicator);
         }
         public ActionResult AddCompetitorValue(Indicator indicator)
         {
-            return View();
+            SetForeCastPeriodSelectedIndexTrue(indicator);
+
+            indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
+                .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index].ForecastPeriodCompetitorValue.
+                Add(new ForecastPeriodCompetitorValue()
+                {
+                    ForecastPeriodID = indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index].ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index].ID,
+                    IsDelete = false,
+                });
+
+            ViewbagData(indicator);
+            return View(_SceneView, indicator);
+        }
+        public ActionResult DeleteCompetitorValue(Indicator indicator)
+        {
+            SetForeCastPeriodSelectedIndexTrue(indicator);
+            foreach (var i in GetForeCastPeriodByIsSelect(indicator).ForecastPeriodCompetitorValue)
+            {
+                if (i.isDeleteFPCValue)
+                {
+                    if (i.ID == 0)
+                    {
+                        var tempFPCValueList = GetForeCastPeriodByIsSelect(indicator).ForecastPeriodCompetitorValue.ToList();
+                        tempFPCValueList.Remove(i);
+
+                        indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
+                        .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index]
+                        .ForecastPeriodCompetitorValue = tempFPCValueList;
+                    }
+                    else
+                    {
+                        i.IsDelete = true;
+                    }
+                    break;
+                }
+            }
+            ViewbagData(indicator);
+            return View(_SceneView, indicator);
         }
         public ActionResult ChangeFile(Indicator indicator)
         {
-            return View();
+
+            ViewbagData(indicator);
+            return View(_SceneView, indicator);
         }
 
         [HttpPost]
         public ActionResult Result(Indicator indicator)
         {
-            return View();
+            ForecastPeriodResultRemark FPResultRemark = GetForeCastPeriodByIsSelect(indicator).ForecastPeriodResultRemark.First();
+
+            if (FPResultRemark.FilePeriodDoc.First() != null)
+            {
+                foreach (var i in FPResultRemark.FilePeriodDoc)
+                {
+                    HttpPostedFileBase file = i;
+                    if (file.ContentLength > 0)
+                    {
+                        ForecastPeriodDocFile forecastPeriodDocFile = new ForecastPeriodDocFile()
+                        {
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            IsDelete = false,
+                            IsLastDelete = false,
+                        };
+
+                        MRTFile mRTFile = InitMRTFile(file, out string serverPath);
+
+                        file.SaveAs(serverPath);
+                        db.MRTFile.Add(mRTFile);
+                        db.SaveChanges();
+                        forecastPeriodDocFile.FilePathID = mRTFile.ID;
+                        forecastPeriodDocFile.ForecastPeriodResultRemarkID = FPResultRemark.ID;
+                        FPResultRemark.ForecastPeriodDocFile.Add(forecastPeriodDocFile);
+                    }
+                }
+                foreach(var i in FPResultRemark.ForecastPeriodDocFile)
+                {
+                    db.ForecastPeriodDocFile.Add(i);
+                }
+            }
+
+            if (FPResultRemark.FileAnalysisResults.First() != null)
+            {
+                foreach (var i in FPResultRemark.FileAnalysisResults)
+                {
+                    HttpPostedFileBase file = i;
+                    if (file.ContentLength > 0)
+                    {
+                        ForecastAnalysisResultFile forecastAnalysisResultFile = new ForecastAnalysisResultFile()
+                        {
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            IsDelete = false,
+                            IsLastDelete = false,
+                        };
+                        FPResultRemark.ForecastAnalysisResultFile.Add(forecastAnalysisResultFile);
+
+                        MRTFile mRTFile = InitMRTFile(file, out string serverPath);
+
+                        file.SaveAs(serverPath);
+                        db.MRTFile.Add(mRTFile);
+                        db.SaveChanges();
+                        forecastAnalysisResultFile.FilePathID = mRTFile.ID;
+                        forecastAnalysisResultFile.ForecastPeriodResultRemarkID = FPResultRemark.ID;
+                        db.ForecastAnalysisResultFile.Add(forecastAnalysisResultFile);
+                    }
+                }
+                foreach(var i in FPResultRemark.ForecastAnalysisResultFile)
+                {
+                    db.ForecastAnalysisResultFile.Add(i);
+                }
+            }
+
+            if (FPResultRemark.FileChangeActionPlan.First() != null)
+            {
+                foreach (var i in FPResultRemark.FileChangeActionPlan)
+                {
+                    HttpPostedFileBase file = i;
+                    if (file.ContentLength > 0)
+                    {
+                        ForecastChangeActionPlanFile forecastChangeActionPlanFile = new ForecastChangeActionPlanFile()
+                        {
+                            CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
+                            IsDelete = false,
+                            IsLastDelete = false,
+                        };
+                        FPResultRemark.ForecastChangeActionPlanFile.Add(forecastChangeActionPlanFile);
+
+                        MRTFile mRTFile = InitMRTFile(file, out string serverPath);
+
+                        file.SaveAs(serverPath);
+                        db.MRTFile.Add(mRTFile);
+                        db.SaveChanges();
+                        forecastChangeActionPlanFile.FilePathID = mRTFile.ID;
+                        forecastChangeActionPlanFile.ForecastPeriodResultRemarkID = FPResultRemark.ID;
+                        db.ForecastChangeActionPlanFile.Add(forecastChangeActionPlanFile);
+                    }
+                }
+                foreach(var i in FPResultRemark.ForecastChangeActionPlanFile)
+                {
+                    db.ForecastChangeActionPlanFile.Add(i);
+                }
+            }
+
+            if(FPResultRemark.ID != 0)
+            {
+                db.Entry(FPResultRemark).State = EntityState.Modified;
+            }
+
+            indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
+                .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index]
+                .ForecastPeriodResultRemark.ToList()[0] = FPResultRemark;
+
+            foreach (var i in indicator.ImportantIndicatorResultMeasurement)
+            {
+                SaveImResult(indicator);
+                foreach (var j in i.ForecastPeriod)
+                {
+                    SaveForecastPeriod(i);
+                    foreach (var fVaRValue in j.ForecastValueAndRealValue)
+                    {
+                        fVaRValue.UpdateDate = DateTime.Now;
+                        if (fVaRValue.ID == 0)
+                        {
+                            fVaRValue.CreateDate = DateTime.Now;
+                            db.ForecastValueAndRealValue.Add(fVaRValue);
+                        }
+                        else
+                        {
+                            db.Entry(fVaRValue).State = EntityState.Modified;
+                        }
+                    }
+                    foreach (var comValue in j.ForecastPeriodCompetitorValue)
+                    {
+                        comValue.UpdateDate = DateTime.Now;
+                        if (comValue.ID == 0)
+                        {
+                            comValue.CreateDate = DateTime.Now;
+                            db.ForecastPeriodCompetitorValue.Add(comValue);
+                        }
+                        else
+                        {
+                            db.Entry(comValue).State = EntityState.Modified;
+                        }
+                    }
+
+                    foreach (var fPtool in j.ForecastPeriodToolAndMethod)
+                    {
+                        fPtool.UpdateDate = DateTime.Now;
+                        if (fPtool.ID == 0)
+                        {
+                            fPtool.CreateDate = DateTime.Now;
+                            db.ForecastPeriodToolAndMethod.Add(fPtool);
+                        }
+                        else
+                        {
+                            db.Entry(fPtool).State = EntityState.Modified;
+                        }
+                    }
+                }
+            }
+
+            //TODO unSave
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
         public ActionResult Report(int? sOEPlanID)
         {
             return View();
         }
 
-        private void ViewbagData()
+        private void ViewbagData(Indicator indicator)
         {
             ViewBag.IndicatorTypeDropdownList = _IndicatorTypeDropdownList;
             ViewBag.IndicatorUnitDropdownList = _IndicatorUnitDropdownList;
@@ -361,6 +588,7 @@ namespace MRT_Demo.Controllers
                 PMoYID_dic.Add(i.Period, i.ID);
             }
             ViewBag.PMoYID_dic = PMoYID_dic;
+            ViewBag.PeriodDic = _PeriodDic[indicator.PeriodSelected_Index];
         }
 
         private void ClearStatic()
@@ -446,9 +674,129 @@ namespace MRT_Demo.Controllers
             _PeriodDic.Add(2, _yearDic);
         }
 
-        private void ViewbagPeriodDic(Indicator indicator)
+        private List<ForecastPeriodToolAndMethod> InitForecastPeriodMethodList()
         {
-            ViewBag.PeriodDic = _PeriodDic[indicator.PeriodSelected_Index];
+            List<ForecastPeriodToolAndMethod> forecastPeriodToolAndMethodList = new List<ForecastPeriodToolAndMethod>();
+            foreach (var i in db.ForecastTool)
+            {
+                //!tool
+                forecastPeriodToolAndMethodList.Add(new ForecastPeriodToolAndMethod() { FPToolName = i.ForecastTool1, ForecastToolID = i.ID });
+            }
+            //!other tool
+            forecastPeriodToolAndMethodList.Add(new ForecastPeriodToolAndMethod() { FPToolName = "อื่นๆ โปรดระบุ", IsOtherTool = true });
+            return forecastPeriodToolAndMethodList;
+        }
+
+        private List<ForecastValueAndRealValue> InitForecastValueAndRealValueList()
+        {
+            List<ForecastValueAndRealValue> forecastValueAndRealValueList = new List<ForecastValueAndRealValue>();
+            for (int i = 0; i < _IndicatorUnitDropdownList.Count; i++)
+            {
+                forecastValueAndRealValueList.Add(new ForecastValueAndRealValue() { UnitIndex = i });
+            }
+
+            return forecastValueAndRealValueList;
+        }
+
+        private void SetForeCastPeriodSelectedIndexTrue(Indicator indicator)
+        {
+            indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
+                .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index].IsSelect = true;
+        }
+
+        private ForecastPeriod GetForeCastPeriodByIsSelect(Indicator indicator)
+        {
+            SetForeCastPeriodSelectedIndexTrue(indicator);
+
+            return indicator.ImportantIndicatorResultMeasurement.ToList()[indicator.PeriodSelected_Index]
+            .ForecastPeriod.ToList()[indicator.ForeCastPeriodSelected_Index];
+        }
+
+        private MRTFile InitMRTFile(HttpPostedFileBase file, out string serverPath)
+        {
+            string folder = "~/FilesUpload";
+
+            MRTFile mRTFile = new MRTFile();
+            mRTFile.Name = Path.GetFileName(file.FileName);
+            mRTFile.Path = folder + "/" + mRTFile.Name;
+            mRTFile.isDelete = false;
+            serverPath = Path.Combine(Server.MapPath(folder), mRTFile.Name);
+            return mRTFile;
+        }
+
+        private void SaveImResult(Indicator indicator)
+        {
+            var PMoQoY = db.PeriodMountOrQuarterOrYear.ToList();
+            int indexId = 0;
+            foreach (var i in indicator.ImportantIndicatorResultMeasurement)
+            {
+                i.UpdateDate = DateTime.Now;
+                if (i.ID == 0)
+                {
+                    i.IndicatorID = indicator.ID;
+                    i.CreateDate = DateTime.Now;
+                    i.PeriodMounthOrQuarterOrYearID = PMoQoY[indexId].ID;
+                    db.ImportantIndicatorResultMeasurement.Add(i);
+                    indexId++;
+                }
+                else
+                {
+                    db.Entry(i).State = EntityState.Modified;
+                }
+            }
+        }
+
+        private void SaveForecastPeriod(ImportantIndicatorResultMeasurement imResult)
+        {
+            if (imResult.ID == 0)
+            {
+                switch (imResult.ForecastPeriod.Count)
+                {
+                    case 2:
+                        int key_year = 0;
+                        foreach (var i in imResult.ForecastPeriod)
+                        {
+                            i.ImportantIndicatorResultMeasureID = imResult.ID;
+                            i.MountOrQuarterOrYear = _yearDic[key_year];
+                            i.CreateDate = DateTime.Now;
+                            i.UpdateDate = DateTime.Now;
+                            db.ForecastPeriod.Add(i);
+                            key_year++;
+                        }
+                        break;
+                    case 4:
+                        int key_quarter = 0;
+                        foreach (var i in imResult.ForecastPeriod)
+                        {
+                            i.ImportantIndicatorResultMeasureID = imResult.ID;
+                            i.MountOrQuarterOrYear = _quartersDic[key_quarter];
+                            i.CreateDate = DateTime.Now;
+                            i.UpdateDate = DateTime.Now;
+                            db.ForecastPeriod.Add(i);
+                            key_quarter++;
+                        }
+                        break;
+                    case 12:
+                        int key_month = 0;
+                        foreach (var i in imResult.ForecastPeriod)
+                        {
+                            i.ImportantIndicatorResultMeasureID = imResult.ID;
+                            i.MountOrQuarterOrYear = _monthsDic[key_month];
+                            i.CreateDate = DateTime.Now;
+                            i.UpdateDate = DateTime.Now;
+                            db.ForecastPeriod.Add(i);
+                            key_month++;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                foreach (var i in imResult.ForecastPeriod)
+                {
+                    db.Entry(i).State = EntityState.Modified;
+                }
+            }
         }
 
     }

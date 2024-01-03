@@ -19,6 +19,6 @@ namespace MRT_Demo.Models
     [MetadataType(typeof(ForecastValueAndRealValueMetadata))]
     public partial class ForecastValueAndRealValue
     {
-
+        public int UnitIndex {  get; set; }
     }
 }

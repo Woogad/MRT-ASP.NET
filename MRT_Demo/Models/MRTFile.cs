@@ -12,10 +12,10 @@ namespace MRT_Demo.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ForecastPeriodResultRemark
+    public partial class MRTFile
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ForecastPeriodResultRemark()
+        public MRTFile()
         {
             this.ForecastAnalysisResultFile = new HashSet<ForecastAnalysisResultFile>();
             this.ForecastChangeActionPlanFile = new HashSet<ForecastChangeActionPlanFile>();
@@ -23,31 +23,14 @@ namespace MRT_Demo.Models
         }
     
         public int ID { get; set; }
-        public Nullable<int> ForecastPeriodID { get; set; }
-        public string HelpImproveIndicator { get; set; }
-        public string ProblemAndCorrection { get; set; }
-        public string ImportantFactorsAndEvents { get; set; }
-        public string ReasonForToolChange { get; set; }
-        public bool IsAnalysisResults { get; set; }
-        public string AnalysisResults { get; set; }
-        public bool IsChangeActionPlan { get; set; }
-        public string ChangeActionPlan { get; set; }
-        public bool IsChangeOperation { get; set; }
-        public string ChangeOperation { get; set; }
-        public bool IsOther { get; set; }
-        public string Other { get; set; }
-        public Nullable<int> CreateBy { get; set; }
-        public Nullable<int> UpdateBy { get; set; }
-        public Nullable<System.DateTime> CreateDate { get; set; }
-        public Nullable<System.DateTime> UpdateDate { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
-        public Nullable<bool> IsLastDelete { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public Nullable<bool> isDelete { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ForecastAnalysisResultFile> ForecastAnalysisResultFile { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ForecastChangeActionPlanFile> ForecastChangeActionPlanFile { get; set; }
-        public virtual ForecastPeriod ForecastPeriod { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ForecastPeriodDocFile> ForecastPeriodDocFile { get; set; }
     }

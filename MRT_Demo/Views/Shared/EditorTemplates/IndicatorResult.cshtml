@@ -4,7 +4,8 @@
     Dictionary<int, string> PeriodDic = ViewBag.PeriodDic;
 }
 
-@Html.HiddenFor(m => m.ForeCastPeriodSelected_Index, new { Value = 0 })
+@Html.HiddenFor(m => m.ForeCastPeriodSelected_Index)
+
 <div class="mb-3">
     @foreach (KeyValuePair<int, string> i in PeriodDic)
     {

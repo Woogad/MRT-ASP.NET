@@ -83,11 +83,13 @@
           <Property Name="ProblemAndCorrection" Type="nvarchar" MaxLength="50" />
           <Property Name="ImportantFactorsAndEvents" Type="nvarchar" MaxLength="50" />
           <Property Name="ReasonForToolChange" Type="nvarchar" MaxLength="50" />
-          <Property Name="IsAnalysisResults" Type="bit" />
+          <Property Name="IsAnalysisResults" Type="bit" Nullable="false" />
           <Property Name="AnalysisResults" Type="nvarchar" MaxLength="50" />
-          <Property Name="IsChangeOperation" Type="bit" />
+          <Property Name="IsChangeActionPlan" Type="bit" Nullable="false" />
+          <Property Name="ChangeActionPlan" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsChangeOperation" Type="bit" Nullable="false" />
           <Property Name="ChangeOperation" Type="nvarchar" MaxLength="50" />
-          <Property Name="IsOther" Type="bit" />
+          <Property Name="IsOther" Type="bit" Nullable="false" />
           <Property Name="Other" Type="nvarchar" MaxLength="50" />
           <Property Name="CreateBy" Type="int" />
           <Property Name="UpdateBy" Type="int" />
@@ -265,6 +267,15 @@
           <Property Name="IsDelete" Type="bit" />
           <Property Name="IsLastDelete" Type="bit" />
         </EntityType>
+        <EntityType Name="MRTFile">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Path" Type="nvarchar(max)" />
+          <Property Name="isDelete" Type="bit" />
+        </EntityType>
         <EntityType Name="PeriodMountOrQuarterOrYear">
           <Key>
             <PropertyRef Name="ID" />
@@ -361,6 +372,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ForecastAnalysisResultFile_MRTFile">
+          <End Role="MRTFile" Type="Self.MRTFile" Multiplicity="0..1" />
+          <End Role="ForecastAnalysisResultFile" Type="Self.ForecastAnalysisResultFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MRTFile">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ForecastAnalysisResultFile">
+              <PropertyRef Name="FilePathID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ForecastChangeActionPlanFile_ForecastPeriodResultRemark">
           <End Role="ForecastPeriodResultRemark" Type="Self.ForecastPeriodResultRemark" Multiplicity="0..1" />
           <End Role="ForecastChangeActionPlanFile" Type="Self.ForecastChangeActionPlanFile" Multiplicity="*" />
@@ -370,6 +393,18 @@
             </Principal>
             <Dependent Role="ForecastChangeActionPlanFile">
               <PropertyRef Name="ForecastPeriodResultRemarkID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForecastChangeActionPlanFile_MRTFile">
+          <End Role="MRTFile" Type="Self.MRTFile" Multiplicity="0..1" />
+          <End Role="ForecastChangeActionPlanFile" Type="Self.ForecastChangeActionPlanFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MRTFile">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ForecastChangeActionPlanFile">
+              <PropertyRef Name="FilePathID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -394,6 +429,18 @@
             </Principal>
             <Dependent Role="ForecastPeriodDocFile">
               <PropertyRef Name="ForecastPeriodResultRemarkID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForecastPeriodDocFile_MRTFile">
+          <End Role="MRTFile" Type="Self.MRTFile" Multiplicity="0..1" />
+          <End Role="ForecastPeriodDocFile" Type="Self.ForecastPeriodDocFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MRTFile">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ForecastPeriodDocFile">
+              <PropertyRef Name="FilePathID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -656,6 +703,7 @@
           <EntitySet Name="IndicatorType" EntityType="Self.IndicatorType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IndicatorUnit" EntityType="Self.IndicatorUnit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IndicatorXIndicatorType" EntityType="Self.IndicatorXIndicatorType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MRTFile" EntityType="Self.MRTFile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PeriodMountOrQuarterOrYear" EntityType="Self.PeriodMountOrQuarterOrYear" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PredicOwner" EntityType="Self.PredicOwner" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SOEPlan" EntityType="Self.SOEPlan" Schema="dbo" store:Type="Tables" />
@@ -666,8 +714,16 @@
             <End Role="ForecastPeriodResultRemark" EntitySet="ForecastPeriodResultRemark" />
             <End Role="ForecastAnalysisResultFile" EntitySet="ForecastAnalysisResultFile" />
           </AssociationSet>
+          <AssociationSet Name="FK_ForecastAnalysisResultFile_MRTFile" Association="Self.FK_ForecastAnalysisResultFile_MRTFile">
+            <End Role="MRTFile" EntitySet="MRTFile" />
+            <End Role="ForecastAnalysisResultFile" EntitySet="ForecastAnalysisResultFile" />
+          </AssociationSet>
           <AssociationSet Name="FK_ForecastChangeActionPlanFile_ForecastPeriodResultRemark" Association="Self.FK_ForecastChangeActionPlanFile_ForecastPeriodResultRemark">
             <End Role="ForecastPeriodResultRemark" EntitySet="ForecastPeriodResultRemark" />
+            <End Role="ForecastChangeActionPlanFile" EntitySet="ForecastChangeActionPlanFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForecastChangeActionPlanFile_MRTFile" Association="Self.FK_ForecastChangeActionPlanFile_MRTFile">
+            <End Role="MRTFile" EntitySet="MRTFile" />
             <End Role="ForecastChangeActionPlanFile" EntitySet="ForecastChangeActionPlanFile" />
           </AssociationSet>
           <AssociationSet Name="FK_ForecastPeriodCompetitorValue_ForecastPeriod" Association="Self.FK_ForecastPeriodCompetitorValue_ForecastPeriod">
@@ -676,6 +732,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_ForecastPeriodDocFile_ForecastPeriodResultRemark" Association="Self.FK_ForecastPeriodDocFile_ForecastPeriodResultRemark">
             <End Role="ForecastPeriodResultRemark" EntitySet="ForecastPeriodResultRemark" />
+            <End Role="ForecastPeriodDocFile" EntitySet="ForecastPeriodDocFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForecastPeriodDocFile_MRTFile" Association="Self.FK_ForecastPeriodDocFile_MRTFile">
+            <End Role="MRTFile" EntitySet="MRTFile" />
             <End Role="ForecastPeriodDocFile" EntitySet="ForecastPeriodDocFile" />
           </AssociationSet>
           <AssociationSet Name="FK_ForecastPeriodResultRemark_ForecastPeriod" Association="Self.FK_ForecastPeriodResultRemark_ForecastPeriod">
@@ -884,6 +944,19 @@
             <End Role="Strategy" EntitySet="Strategy" />
             <End Role="Tactic" EntitySet="Tactic" />
           </AssociationSet>
+          <EntitySet Name="MRTFile" EntityType="MRTModel.MRTFile" />
+          <AssociationSet Name="FK_ForecastAnalysisResultFile_MRTFile" Association="MRTModel.FK_ForecastAnalysisResultFile_MRTFile">
+            <End Role="MRTFile" EntitySet="MRTFile" />
+            <End Role="ForecastAnalysisResultFile" EntitySet="ForecastAnalysisResultFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForecastChangeActionPlanFile_MRTFile" Association="MRTModel.FK_ForecastChangeActionPlanFile_MRTFile">
+            <End Role="MRTFile" EntitySet="MRTFile" />
+            <End Role="ForecastChangeActionPlanFile" EntitySet="ForecastChangeActionPlanFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForecastPeriodDocFile_MRTFile" Association="MRTModel.FK_ForecastPeriodDocFile_MRTFile">
+            <End Role="MRTFile" EntitySet="MRTFile" />
+            <End Role="ForecastPeriodDocFile" EntitySet="ForecastPeriodDocFile" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="ForecastAnalysisResultFile">
           <Key>
@@ -899,6 +972,7 @@
           <Property Name="IsDelete" Type="Boolean" />
           <Property Name="IsLastDelete" Type="Boolean" />
           <NavigationProperty Name="ForecastPeriodResultRemark" Relationship="MRTModel.FK_ForecastAnalysisResultFile_ForecastPeriodResultRemark" FromRole="ForecastAnalysisResultFile" ToRole="ForecastPeriodResultRemark" />
+          <NavigationProperty Name="MRTFile" Relationship="MRTModel.FK_ForecastAnalysisResultFile_MRTFile" FromRole="ForecastAnalysisResultFile" ToRole="MRTFile" />
         </EntityType>
         <EntityType Name="ForecastChangeActionPlanFile">
           <Key>
@@ -914,6 +988,7 @@
           <Property Name="IsDelete" Type="Boolean" />
           <Property Name="IsLastDelete" Type="Boolean" />
           <NavigationProperty Name="ForecastPeriodResultRemark" Relationship="MRTModel.FK_ForecastChangeActionPlanFile_ForecastPeriodResultRemark" FromRole="ForecastChangeActionPlanFile" ToRole="ForecastPeriodResultRemark" />
+          <NavigationProperty Name="MRTFile" Relationship="MRTModel.FK_ForecastChangeActionPlanFile_MRTFile" FromRole="ForecastChangeActionPlanFile" ToRole="MRTFile" />
         </EntityType>
         <EntityType Name="ForecastPeriod">
           <Key>
@@ -961,6 +1036,7 @@
           <Property Name="IsDelete" Type="Boolean" />
           <Property Name="IsLastDelete" Type="Boolean" />
           <NavigationProperty Name="ForecastPeriodResultRemark" Relationship="MRTModel.FK_ForecastPeriodDocFile_ForecastPeriodResultRemark" FromRole="ForecastPeriodDocFile" ToRole="ForecastPeriodResultRemark" />
+          <NavigationProperty Name="MRTFile" Relationship="MRTModel.FK_ForecastPeriodDocFile_MRTFile" FromRole="ForecastPeriodDocFile" ToRole="MRTFile" />
         </EntityType>
         <EntityType Name="ForecastPeriodResultRemark">
           <Key>
@@ -972,11 +1048,13 @@
           <Property Name="ProblemAndCorrection" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ImportantFactorsAndEvents" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ReasonForToolChange" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsAnalysisResults" Type="Boolean" />
+          <Property Name="IsAnalysisResults" Type="Boolean" Nullable="false" />
           <Property Name="AnalysisResults" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsChangeOperation" Type="Boolean" />
+          <Property Name="IsChangeActionPlan" Type="Boolean" Nullable="false" />
+          <Property Name="ChangeActionPlan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsChangeOperation" Type="Boolean" Nullable="false" />
           <Property Name="ChangeOperation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="IsOther" Type="Boolean" />
+          <Property Name="IsOther" Type="Boolean" Nullable="false" />
           <Property Name="Other" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreateBy" Type="Int32" />
           <Property Name="UpdateBy" Type="Int32" />
@@ -1565,7 +1643,55 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="MRTFile">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ForecastAnalysisResultFile" Relationship="MRTModel.FK_ForecastAnalysisResultFile_MRTFile" FromRole="MRTFile" ToRole="ForecastAnalysisResultFile" />
+          <NavigationProperty Name="ForecastChangeActionPlanFile" Relationship="MRTModel.FK_ForecastChangeActionPlanFile_MRTFile" FromRole="MRTFile" ToRole="ForecastChangeActionPlanFile" />
+          <NavigationProperty Name="ForecastPeriodDocFile" Relationship="MRTModel.FK_ForecastPeriodDocFile_MRTFile" FromRole="MRTFile" ToRole="ForecastPeriodDocFile" />
+          <Property Name="isDelete" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_ForecastAnalysisResultFile_MRTFile">
+          <End Type="MRTModel.MRTFile" Role="MRTFile" Multiplicity="0..1" />
+          <End Type="MRTModel.ForecastAnalysisResultFile" Role="ForecastAnalysisResultFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MRTFile">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ForecastAnalysisResultFile">
+              <PropertyRef Name="FilePathID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForecastChangeActionPlanFile_MRTFile">
+          <End Type="MRTModel.MRTFile" Role="MRTFile" Multiplicity="0..1" />
+          <End Type="MRTModel.ForecastChangeActionPlanFile" Role="ForecastChangeActionPlanFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MRTFile">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ForecastChangeActionPlanFile">
+              <PropertyRef Name="FilePathID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForecastPeriodDocFile_MRTFile">
+          <End Type="MRTModel.MRTFile" Role="MRTFile" Multiplicity="0..1" />
+          <End Type="MRTModel.ForecastPeriodDocFile" Role="ForecastPeriodDocFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MRTFile">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ForecastPeriodDocFile">
+              <PropertyRef Name="FilePathID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1657,6 +1783,8 @@
                 <ScalarProperty Name="IsOther" ColumnName="IsOther" />
                 <ScalarProperty Name="ChangeOperation" ColumnName="ChangeOperation" />
                 <ScalarProperty Name="IsChangeOperation" ColumnName="IsChangeOperation" />
+                <ScalarProperty Name="ChangeActionPlan" ColumnName="ChangeActionPlan" />
+                <ScalarProperty Name="IsChangeActionPlan" ColumnName="IsChangeActionPlan" />
                 <ScalarProperty Name="AnalysisResults" ColumnName="AnalysisResults" />
                 <ScalarProperty Name="IsAnalysisResults" ColumnName="IsAnalysisResults" />
                 <ScalarProperty Name="ReasonForToolChange" ColumnName="ReasonForToolChange" />
@@ -1935,6 +2063,16 @@
                 <ScalarProperty Name="StrategyID" ColumnName="StrategyID" />
                 <ScalarProperty Name="Tactic1" ColumnName="Tactic" />
                 <ScalarProperty Name="NO" ColumnName="NO" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MRTFile">
+            <EntityTypeMapping TypeName="MRTModel.MRTFile">
+              <MappingFragment StoreEntitySet="MRTFile">
+                <ScalarProperty Name="isDelete" ColumnName="isDelete" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

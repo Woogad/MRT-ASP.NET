@@ -9,20 +9,41 @@
         $("#resultForm").attr("action", '@Url.Action("ChangePeriod","IndicatorTargetAndResult")');
         $("#resultForm").submit();
     }
-
     function ChangeMonthQuarterHailfYear(m,k) {
         m.value = k;
         $("#resultForm").attr("action", '@Url.Action("ChangeMonthQuarterHailfYear","IndicatorTargetAndResult")');
         $("#resultForm").submit();
     }
-    function CheckMethod(method_id) {
-        method_id.disabled = !method_id.disabled;
+    function CheckMethod(method) {
+        method.disabled = !method.disabled
+
     }
+    function AddCompetitorValue() {
+        $("#resultForm").attr("action", '@Url.Action("AddCompetitorValue","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+    }
+    function DeleteCompetitorValue(m) {
+        m.value = true;
+        $("#resultForm").attr("action", '@Url.Action("DeleteCompetitorValue","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+    }
+    function ChangeFile() {
+        $("#resultForm").attr("action", '@Url.Action("ChangeFile","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+    }
+    @*function ChangeFile(file) {
+        console.log("haha");
+        console.log(file);
+        if (file.length > 0) {
+        $("#resultForm").attr("action", '@Url.Action("ChangeFile","IndicatorTargetAndResult")');
+        $("#resultForm").submit();
+        }
+    }*@
 
 </script>
 <h2>Result</h2>
 
-@using (Html.BeginForm("Result", "indicatorTargetAndResult", FormMethod.Post, new { id = "resultForm" }))
+@using (Html.BeginForm("Result", "indicatorTargetAndResult", FormMethod.Post, new { id = "resultForm", enctype = "multipart/form-data" }))
 {
     @Html.EditorFor(m => m, "IndicatorTarget", new { Disable = true })
     @Html.EditorFor(m => m, "IndicatorResult")

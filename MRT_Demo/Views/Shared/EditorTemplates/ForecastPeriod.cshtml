@@ -1,28 +1,31 @@
 ﻿@model MRT_Demo.Models.ForecastPeriod
 
 @{
-    MRT_Demo.Models.ForecastPeriodToolAndMethod FPTM = new MRT_Demo.Models.ForecastPeriodToolAndMethod();
-    MRT_Demo.Models.ForecastValueAndRealValue FVaRV = new MRT_Demo.Models.ForecastValueAndRealValue();
     List<SelectListItem> indicatorUnitDropdownList = ViewBag.IndicatorUnitDropdownList;
 }
 
 @Html.HiddenFor(m => m.ID)
+@Html.HiddenFor(m => m.ImportantIndicatorResultMeasureID)
+@Html.HiddenFor(m => m.MountOrQuarterOrYear)
 @Html.HiddenFor(m => m.IsSelect, new { Value = false })
+@Html.HiddenFor(m => m.IsDelete)
+@Html.HiddenFor(m => m.CreateDate)
+@Html.HiddenFor(m => m.UpdateDate)
 
 @if (Model.IsSelect == true)
 {
-    <table class="table-responsive-lg table-bordered ">
+    <table class="table-responsive-lg table-bordered">
         <thead>
             <tr>
                 <th colspan="2">เครื่องมือ/วิธีการ</th>
                 <th rowspan="2">หน่วยวัด</th>
-                <th rowspan="2">@Html.DisplayNameFor(m => FVaRV.ForecastValue)</th>
-                <th rowspan="2">@Html.DisplayNameFor(m => FVaRV.RealValue)</th>
+                <th rowspan="2">@Html.DisplayNameFor(m => m.ForecastValueAndRealValue.First().ForecastValue)</th>
+                <th rowspan="2">@Html.DisplayNameFor(m => m.ForecastValueAndRealValue.First().RealValue)</th>
                 <th rowspan="2">@Html.DisplayNameFor(m => m.ForecastPeriodCompetitorValue)</th>
             </tr>
             <tr>
-                <th>@Html.DisplayNameFor(m => FPTM.ForecastToolID)</th>
-                <th>@Html.DisplayNameFor(m => FPTM.Method)</th>
+                <th class="w-25">@Html.DisplayNameFor(m => m.ForecastPeriodToolAndMethod.First().ForecastToolID)</th>
+                <th class="">@Html.DisplayNameFor(m => m.ForecastPeriodToolAndMethod.First().Method)</th>
             </tr>
         </thead>
         <tbody>
@@ -33,19 +36,42 @@
                 <td rowspan="10">
                     @Html.EditorFor(m => m.ForecastPeriodToolAndMethod, new { IsDisplayTool = false })
                 </td>
+                @Html.EditorFor(m => m.ForecastValueAndRealValue.ToList()[0], "ForecastValueAndRealValue", "ForecastValueAndRealValue[" + 0 + "]")
+                @*@{ unitIndex++;}*@
+                <td rowspan="10">
+                    <div class="col d-flex justify-content-end">
+                        <input value="เพิ่ม" type="submit" onclick="AddCompetitorValue()" />
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <table class="table-bordered">
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.ForecastPeriodCompetitorValue.First().Detail)</th>
+                                <th>จัดการ</th>
+                            </tr>
+                            <tbody>
+                                @Html.EditorFor(m => m.ForecastPeriodCompetitorValue)
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
             </tr>
-            <tr>
-                <td>okok</td>
-                <td>yoyo</td>
-                <td>haha</td>
-            </tr>
+            @for (int i = 1; i < Model.ForecastValueAndRealValue.Count; i++)
+            {
+                <tr>
+                    @Html.EditorFor(m => m.ForecastValueAndRealValue.ToList()[i], "ForecastValueAndRealValue", "ForecastValueAndRealValue[" + i + "]")
+                </tr>
+            }
         </tbody>
     </table>
+    @Html.EditorFor(m => m.ForecastPeriodResultRemark)
 }
 else
 {
     <div hidden>
         @Html.EditorFor(m => m.ForecastPeriodToolAndMethod, new { IsDisplayTool = true })
         @Html.EditorFor(m => m.ForecastPeriodToolAndMethod, new { IsDisplayTool = false })
+        @Html.EditorFor(m => m.ForecastValueAndRealValue)
+        @Html.EditorFor(m => m.ForecastPeriodCompetitorValue)
+        @Html.EditorFor(m => m.ForecastPeriodResultRemark)
     </div>
 }
